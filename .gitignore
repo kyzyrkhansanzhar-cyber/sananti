@@ -1,0 +1,23 @@
+# Binaries and test logs
+logs/
+*.log
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+cover.out
+
+# Go dependency and cache files
+vendor/
+.go/
+.cache/
+
+# System / IDE config
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
