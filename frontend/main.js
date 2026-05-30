@@ -321,8 +321,32 @@ async function fetchLogs() {
     }
 }
 
-// Initialize on page mount
+// Initialize on page mount and register safe, non-inline addEventListener binders
 window.addEventListener('DOMContentLoaded', () => {
+    // 1. Language switcher buttons listener
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.getAttribute('data-lang');
+            setLanguage(lang);
+        });
+    });
+
+    // 2. Active Antivirus Shield Toggle listener
+    const toggleEl = document.getElementById('antivirus-toggle');
+    if (toggleEl) {
+        toggleEl.addEventListener('change', (e) => {
+            toggleProtection(e.target.checked);
+        });
+    }
+
+    // 3. Deceptive Trap Buttons listener
+    document.querySelectorAll('.trap-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const path = btn.getAttribute('data-path');
+            triggerTrap(path);
+        });
+    });
+
     const savedLang = localStorage.getItem('sananti_lang') || 'en';
     setLanguage(savedLang);
     
