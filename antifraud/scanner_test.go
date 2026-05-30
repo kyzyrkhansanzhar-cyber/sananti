@@ -29,6 +29,7 @@ func TestAntiFraudScanner_RulesEvaluation(t *testing.T) {
 		NewCardBINBlacklistRule(),
 		NewDeviceReputationRule(10 * time.Second),
 		&HeaderReputationRule{},
+		NewRecipientBlacklistRule(),
 	}
 	scanner := NewAntiFraudScanner(blocker, mlog, rules...)
 
@@ -160,6 +161,26 @@ func TestAntiFraudScanner_RulesEvaluation(t *testing.T) {
 	}
 	if assessUA.RiskScore != 0.50 {
 		t.Errorf("expected risk score 0.50, got %.2f", assessUA.RiskScore)
+	}
+
+	// --- Case 6: Recipient Blacklist Scam Number Check ---
+	txScam := Transaction{
+		ID:             "tx-scam-1",
+		UserID:         "user-victim",
+		IP:             "192.168.1.10",
+		Amount:         200.0,
+		RecipientPhone: "+77777777777", // Blacklisted scam number!
+		Timestamp:      time.Now(),
+	}
+	assessScam, err := scanner.AnalyzeTransaction(ctx, txScam)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if assessScam.Approved || assessScam.Recommendation != "BLOCK" {
+		t.Error("expected scam recipient to trigger instant BLOCK")
+	}
+	if assessScam.RiskScore != 1.0 {
+		t.Errorf("expected risk score 1.0, got %.2f", assessScam.RiskScore)
 	}
 }
 

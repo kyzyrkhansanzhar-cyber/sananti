@@ -229,3 +229,47 @@ func (r *HeaderReputationRule) Evaluate(tx Transaction, history []Transaction, b
 	return 0.0, ""
 }
 
+// RecipientBlacklistRule blocks transactions sent to known scammers, fraudsters, or mule accounts.
+type RecipientBlacklistRule struct {
+	scamPhones map[string]bool
+	scamCards  map[string]bool
+}
+
+func NewRecipientBlacklistRule() *RecipientBlacklistRule {
+	phones := map[string]bool{
+		"+77777777777": true,
+		"87777777777":  true,
+		"+77079998877": true,
+		"87079998877":  true,
+	}
+	cards := map[string]bool{
+		"4400551122334455": true,
+		"4111112222222222": true,
+	}
+	return &RecipientBlacklistRule{
+		scamPhones: phones,
+		scamCards:  cards,
+	}
+}
+
+func (r *RecipientBlacklistRule) Name() string { return "RecipientBlacklistCheck" }
+
+func (r *RecipientBlacklistRule) Evaluate(tx Transaction, history []Transaction, blocker core.Blocker) (float64, string) {
+	if tx.RecipientPhone != "" {
+		cleanedPhone := strings.ReplaceAll(tx.RecipientPhone, " ", "")
+		if r.scamPhones[cleanedPhone] {
+			return 1.0, fmt.Sprintf("Recipient phone number %s is blacklisted as a known SCAMMER", cleanedPhone)
+		}
+	}
+
+	if tx.RecipientCard != "" {
+		cleanedCard := strings.ReplaceAll(tx.RecipientCard, " ", "")
+		if r.scamCards[cleanedCard] {
+			return 1.0, fmt.Sprintf("Recipient card number %s is blacklisted as a known SCAM/MULE account", cleanedCard)
+		}
+	}
+
+	return 0.0, ""
+}
+
+

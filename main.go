@@ -77,6 +77,7 @@ func main() {
 		antifraud.NewCardBINBlacklistRule(),
 		antifraud.NewDeviceReputationRule(5 * time.Minute),
 		&antifraud.HeaderReputationRule{},
+		antifraud.NewRecipientBlacklistRule(),
 	}
 	scanner := antifraud.NewAntiFraudScanner(blocker, fileLogger, rules...)
 
@@ -441,6 +442,14 @@ func main() {
 									<input type="number" step="0.01" id="pay-amount" value="150.00" required>
 								</div>
 								<div class="form-group">
+									<label data-i18n="recPhone">Recipient Phone (Scammer Check)</label>
+									<input type="text" id="pay-recphone" value="+7 701 555 66 77">
+								</div>
+								<div class="form-group">
+									<label data-i18n="recCard">Recipient Card (Scammer Check)</label>
+									<input type="text" id="pay-reccard" value="4400 2200 4400 2200">
+								</div>
+								<div class="form-group">
 									<label data-i18n="fingerprint">Device Fingerprint Hash</label>
 									<input type="text" id="pay-fingerprint" value="df_hash_xyz_99" required>
 								</div>
@@ -522,6 +531,8 @@ func main() {
 							amount: "Amount ($)",
 							fingerprint: "Device Fingerprint Hash",
 							submitPayment: "Submit Secure Payment",
+							recPhone: "Recipient Phone (Scammer Check)",
+							recCard: "Recipient Card (Scammer Check)",
 							decoyTitle: "🍯 Deceptive Decoy Traps",
 							decoyDesc: "Decoys scan for malicious bots and reconnaissance. Triggering traps instantly blacklists your IP.",
 							honeyFieldTitle: "📨 Feedback Honeypot & Time-Lock Form",
@@ -547,6 +558,8 @@ func main() {
 							amount: "Сомасы ($)",
 							fingerprint: "Құрылғының Сандық Таңбасы",
 							submitPayment: "Қауіпсіз Төлемді Жіберу",
+							recPhone: "Алушының телефоны (Алаяқтарды тексеру)",
+							recCard: "Алушының картасы (Алаяқтарды тексеру)",
 							decoyTitle: "🍯 Алдарқату Тұзақтары",
 							decoyDesc: "Тұзақтар автоматты боттарды және барлау әрекеттерін бақылайды. Оларды басу IP-ді бірден қара тізімге салады.",
 							honeyFieldTitle: "📨 Кері Байланыс және Уақыт Құлыпты Форма",
@@ -572,6 +585,8 @@ func main() {
 							amount: "Сумма ($)",
 							fingerprint: "Цифровой Отпечаток Устройства",
 							submitPayment: "Отправить Безопасный Платеж",
+							recPhone: "Телефон получателя (Проверка мошенников)",
+							recCard: "Карта получателя (Проверка мошенников)",
 							decoyTitle: "🍯 Обманные Ловушки-Приманки",
 							decoyDesc: "Ловушки выявляют вредоносных ботов и разведку. Активация ловушек мгновенно блокирует ваш IP.",
 							honeyFieldTitle: "📨 Форма Обратной Связи и Временной Замок",
@@ -689,6 +704,8 @@ func main() {
 							card_country: document.getElementById('pay-ccountry').value,
 							ip_country: document.getElementById('pay-ipcountry').value,
 							amount: parseFloat(document.getElementById('pay-amount').value),
+							recipient_phone: document.getElementById('pay-recphone').value,
+							recipient_card: document.getElementById('pay-reccard').value,
 							device_fingerprint: document.getElementById('pay-fingerprint').value
 						};
 

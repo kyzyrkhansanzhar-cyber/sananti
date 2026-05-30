@@ -22,6 +22,8 @@ type Transaction struct {
 	DeviceFingerprint string    `json:"device_fingerprint"`
 	Email             string    `json:"email"`
 	UserAgent         string    `json:"user_agent"`
+	RecipientCard     string    `json:"recipient_card"`
+	RecipientPhone    string    `json:"recipient_phone"`
 	Timestamp         time.Time `json:"timestamp"`
 }
 
