@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sananti Active Deception Shield</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Ambient Floating 3D Orbs -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <div class="container">
+        <!-- Language Toggles -->
+        <div class="lang-container">
+            <button class="lang-btn active" id="lang-btn-en" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" id="lang-btn-kk" onclick="setLanguage('kk')">KK</button>
+            <button class="lang-btn" id="lang-btn-ru" onclick="setLanguage('ru')">RU</button>
+        </div>
+
+        <header>
+            <h1 data-i18n="title">🛡️ SANANTI DIGITAL GUARD</h1>
+            <p class="subtitle" data-i18n="subtitle">Active Cyber-Deception Shield & Anti-Fraud Desktop Console</p>
+        </header>
+
+        <!-- Configuration Panel -->
+        <div class="top-config-bar">
+            <div class="config-grid">
+                <div>
+                    <label data-i18n="threshold">🛑 Block Threat Threshold</label>
+                    <div class="slider-container">
+                        <input type="range" id="config-threshold" min="0.10" max="1.00" step="0.05" value="0.70" oninput="document.getElementById('threshold-display').innerText = parseFloat(this.value).toFixed(2)">
+                        <span class="slider-val" id="threshold-display">0.70</span>
+                    </div>
+                    <button id="save-config-btn" data-i18n="saveSettings" style="margin-top: 15px; padding: 8px 16px; font-size: 0.9em; width: auto;">Save Settings</button>
+                </div>
+                <div>
+                    <label data-i18n="activeRules">🛡️ Active Scanning Risk Rules</label>
+                    <div class="rules-grid" id="rules-toggles-container">
+                        <!-- Loaded dynamically via Go bindings -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- Payment Guard Scan Tester -->
+            <div class="card">
+                <h2 data-i18n="payGuardTitle">💳 Real-Time Payment Guard</h2>
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label data-i18n="userId">User ID</label>
+                        <input type="text" id="pay-userid" value="user_99" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="email">Email Address</label>
+                        <input type="email" id="pay-email" value="tester@gmail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="txIp">Transaction IP</label>
+                        <input type="text" id="pay-ip" value="82.200.1.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="cardBin">Card BIN (First 6 Digits)</label>
+                        <input type="text" id="pay-bin" value="444455" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="cardCountry">Card Billing Country (ISO)</label>
+                        <input type="text" id="pay-ccountry" value="KZ" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="ipCountry">Transaction IP Country (ISO)</label>
+                        <select id="pay-ipcountry">
+                            <option value="KZ">KZ (Kazakhstan)</option>
+                            <option value="US">US (United States)</option>
+                            <option value="DE">DE (Germany)</option>
+                            <option value="UK">UK (United Kingdom)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="recPhone">Recipient Phone (Scammer Check)</label>
+                        <input type="text" id="pay-recphone" value="+7 701 555 66 77">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="recCard">Recipient Card (Scammer Check)</label>
+                        <input type="text" id="pay-reccard" value="4400 2200 4400 2200">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="amount">Amount ($)</label>
+                        <input type="number" step="0.01" id="pay-amount" value="150.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="fingerprint">Device Fingerprint Hash</label>
+                        <input type="text" id="pay-fingerprint" value="df_hash_xyz_99" required>
+                    </div>
+                    <button type="submit" data-i18n="submitPayment">Submit Secure Payment</button>
+                </form>
+                
+                <div id="result-box"></div>
+            </div>
+
+            <!-- Honeytokens Decoys -->
+            <div class="card">
+                <h2 data-i18n="decoyTitle">🍯 Deceptive Decoy Traps</h2>
+                <p style="color: var(--text-muted); font-size: 0.9em; margin-bottom: 20px;" data-i18n="decoyDesc">
+                    Decoys scan for malicious bots and reconnaissance. Triggering traps instantly blacklists your IP.
+                </p>
+                
+                <label>Trigger Decoy Honeytoken Simulation</label>
+                <div style="margin-bottom: 25px; display: flex; flex-direction: column; gap: 10px;">
+                    <button type="button" class="trap-btn" onclick="triggerTrap('/phpmyadmin')" style="background: rgba(255, 85, 85, 0.1); border: 1px solid rgba(255, 85, 85, 0.25); color: var(--neon-red); font-family: monospace;">Simulate GET /phpmyadmin</button>
+                    <button type="button" class="trap-btn" onclick="triggerTrap('/api/v1/admin/config')" style="background: rgba(255, 85, 85, 0.1); border: 1px solid rgba(255, 85, 85, 0.25); color: var(--neon-red); font-family: monospace;">Simulate GET /api/v1/admin/config</button>
+                </div>
+
+                <div id="trap-result" style="font-weight: bold; margin-top: 10px;"></div>
+            </div>
+        </div>
+
+        <!-- Alert Console -->
+        <div class="card" style="margin-bottom: 40px;">
+            <h2 data-i18n="consoleTitle">📜 Live Security Alerts Console</h2>
+            <div class="console-container" id="logs-console">
+                <div class="console-line">Initializing desktop console stream...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wails Bindings Bridge -->
+    <script src="/wails/ipc.js"></script>
+    <script src="/wails/runtime.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

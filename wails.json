@@ -1,0 +1,10 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "sananti",
+  "outputfilename": "sananti",
+  "frontend:dir": "frontend",
+  "author": {
+    "name": "sanzhar",
+    "email": "sanzhar@kaspi.kz"
+  }
+}
