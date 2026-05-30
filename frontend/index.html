@@ -69,59 +69,36 @@
         </div>
 
         <div class="grid">
-            <!-- Payment Guard Scan Tester -->
-            <div class="card">
+            <!-- Antivirus Threat Simulator -->
+            <div class="card" style="position: relative;">
                 <h2 data-i18n="payGuardTitle">💳 Real-Time Payment Guard</h2>
-                <form id="payment-form">
-                    <div class="form-group">
-                        <label data-i18n="userId">User ID</label>
-                        <input type="text" id="pay-userid" value="user_99" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="email">Email Address</label>
-                        <input type="email" id="pay-email" value="tester@gmail.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="txIp">Transaction IP</label>
-                        <input type="text" id="pay-ip" value="82.200.1.1" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="cardBin">Card BIN (First 6 Digits)</label>
-                        <input type="text" id="pay-bin" value="444455" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="cardCountry">Card Billing Country (ISO)</label>
-                        <input type="text" id="pay-ccountry" value="KZ" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="ipCountry">Transaction IP Country (ISO)</label>
-                        <select id="pay-ipcountry">
-                            <option value="KZ">KZ (Kazakhstan)</option>
-                            <option value="US">US (United States)</option>
-                            <option value="DE">DE (Germany)</option>
-                            <option value="UK">UK (United Kingdom)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="recPhone">Recipient Phone (Scammer Check)</label>
-                        <input type="text" id="pay-recphone" value="+7 701 555 66 77">
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="recCard">Recipient Card (Scammer Check)</label>
-                        <input type="text" id="pay-reccard" value="4400 2200 4400 2200">
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="amount">Amount ($)</label>
-                        <input type="number" step="0.01" id="pay-amount" value="150.00" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="fingerprint">Device Fingerprint Hash</label>
-                        <input type="text" id="pay-fingerprint" value="df_hash_xyz_99" required>
-                    </div>
-                    <button type="submit" data-i18n="submitPayment">Submit Secure Payment</button>
-                </form>
                 
-                <div id="result-box"></div>
+                <!-- Target Selector Tabs -->
+                <div style="margin-bottom: 20px;">
+                    <label data-i18n="selectProfile" style="margin-bottom: 12px; display: block;">Select Scan Target Profile</label>
+                    <div class="target-profile-selector">
+                        <button type="button" class="profile-tab active" id="profile-tab-safe" data-target="safe" data-i18n="profileSafe">🟢 Legit User (Aidos K.)</button>
+                        <button type="button" class="profile-tab" id="profile-tab-scammer" data-target="scammer" data-i18n="profileScammer">🛑 Known Scammer Card</button>
+                        <button type="button" class="profile-tab" id="profile-tab-bot" data-target="bot" data-i18n="profileBot">🤖 Malicious Recon Bot</button>
+                    </div>
+                </div>
+
+                <!-- Profile Preview Box -->
+                <div class="profile-preview-box" id="profile-details-card" style="margin-bottom: 20px;">
+                    <!-- Dynamic preview loaded based on active tab -->
+                </div>
+
+                <!-- Deep Antivirus Scan Action Button & Progress Indicator -->
+                <div class="scan-action-container" style="margin-top: 25px;">
+                    <div class="scan-progress-bar-bg" id="scan-progress-wrapper" style="display: none; height: 8px; background: rgba(0, 0, 0, 0.4); border-radius: 4px; overflow: hidden; margin-bottom: 12px; border: 1px solid rgba(167, 139, 250, 0.15);">
+                        <div class="scan-progress-bar-fill" id="scan-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan)); box-shadow: 0 0 10px var(--neon-cyan); transition: width 0.1s ease;"></div>
+                    </div>
+                    <div class="scan-status-text" id="scan-status-indicator" style="display: none; font-family: 'Fira Code', monospace; font-size: 0.85em; color: var(--neon-purple); margin-bottom: 15px; text-align: center;">Scanning layers... 0%</div>
+                    <button type="button" id="trigger-scan-btn" data-i18n="btnScan">⚡ Engage Deep Security Scan</button>
+                </div>
+
+                <!-- Result Presentation Box -->
+                <div id="result-box" style="margin-top: 20px;"></div>
             </div>
 
             <!-- Honeytokens Decoys -->

@@ -6,18 +6,12 @@ const translations = {
         threshold: "🛑 Block Threat Threshold",
         saveSettings: "Save Settings",
         activeRules: "🛡️ Active Scanning Risk Rules",
-        payGuardTitle: "💳 Real-Time Payment Guard",
-        userId: "User ID",
-        email: "Email Address",
-        txIp: "Transaction IP",
-        cardBin: "Card BIN (First 6 Digits)",
-        cardCountry: "Card Billing Country (ISO)",
-        ipCountry: "Transaction IP Country (ISO)",
-        recPhone: "Recipient Phone (Scammer Check)",
-        recCard: "Recipient Card (Scammer Check)",
-        amount: "Amount ($)",
-        fingerprint: "Device Fingerprint Hash",
-        submitPayment: "Submit Secure Payment",
+        payGuardTitle: "🔬 Active Antivirus Threat Simulator",
+        selectProfile: "Select Scan Target Profile",
+        profileSafe: "🟢 Legit User (Aidos K.)",
+        profileScammer: "🛑 Known Scammer Card",
+        profileBot: "🤖 Malicious Recon Bot",
+        btnScan: "⚡ Engage Deep Security Scan",
         decoyTitle: "🍯 Deceptive Decoy Traps",
         decoyDesc: "Decoys scan for malicious bots and reconnaissance. Triggering traps instantly blacklists your IP.",
         consoleTitle: "📜 Live Security Alerts Console",
@@ -34,18 +28,12 @@ const translations = {
         threshold: "🛑 Қауіпті Бұғаттау Шемі",
         saveSettings: "Параметрлерді Сақтау",
         activeRules: "🛡️ Белсенді Тексеру Ережелері",
-        payGuardTitle: "💳 Төлем Қауіпсіздігі Қорғанысы",
-        userId: "Қолданушы ID",
-        email: "Электрондық Пошта",
-        txIp: "Транзакция IP мекенжайы",
-        cardBin: "Карта BIN-і (Алғашқы 6 сан)",
-        cardCountry: "Карта Шыққан Елі (ISO)",
-        ipCountry: "Транзакция IP Елі (ISO)",
-        recPhone: "Алушының телефоны (Алаяқтарды тексеру)",
-        recCard: "Алушының картасы (Алаяқтарды тексеру)",
-        amount: "Сомасы ($)",
-        fingerprint: "Құрылғының Сандық Таңбасы",
-        submitPayment: "Қауіпсіз Төлемді Жіберу",
+        payGuardTitle: "🔬 Белсенді Қауіп-Қатер Сканерлеушісі",
+        selectProfile: "Тексерілетін профильді таңдаңыз",
+        profileSafe: "🟢 Легитимді қолданушы (Айдос К.)",
+        profileScammer: "🛑 Тізімдегі алаяқ картасы",
+        profileBot: "🤖 Зиянды барлау боты",
+        btnScan: "⚡ Белсенді тексеруді бастау",
         decoyTitle: "🍯 Алдарқату Тұзақтары",
         decoyDesc: "Тұзақтар автоматты боттарды және барлау әрекеттерін бақылайды. Оларды басу IP-ді бірден қара тізімге салады.",
         consoleTitle: "📜 Қауіпсіздік Ескертулері Консолі",
@@ -62,18 +50,12 @@ const translations = {
         threshold: "🛑 Порог Блокировки Угрозы",
         saveSettings: "Сохранить Настройки",
         activeRules: "🛡️ Активные Правила Проверки",
-        payGuardTitle: "💳 Защита Платежей в Реальном Времени",
-        userId: "ID Пользователя",
-        email: "Электронная Почта",
-        txIp: "IP Адрес Транзакции",
-        cardBin: "BIN Карты (Первые 6 цифр)",
-        cardCountry: "Страна Выпуска Карты (ISO)",
-        ipCountry: "Страна IP Транзакции (ISO)",
-        recPhone: "Телефон получателя (Проверка мошенников)",
-        recCard: "Карта получателя (Проверка мошенников)",
-        amount: "Сумма ($)",
-        fingerprint: "Цифровой Отпечаток Устройства",
-        submitPayment: "Отправить Безопасный Платеж",
+        payGuardTitle: "🔬 Активный Симулятор Сканирования Угроз",
+        selectProfile: "Выберите Профиль для Сканирования",
+        profileSafe: "🟢 Legit Пользователь (Айдос К.)",
+        profileScammer: "🛑 Известная Карта Мошенника",
+        profileBot: "🤖 Вредоносный Бот-Разведчик",
+        btnScan: "⚡ Запустить Глубокое Сканирование",
         decoyTitle: "🍯 Обманные Ловушки-Приманки",
         decoyDesc: "Ловушки выявляют вредоносных ботов и разведку. Активация ловушек мгновенно блокирует ваш IP.",
         consoleTitle: "📜 Консоль Уведомлений Безопасности",
@@ -174,6 +156,9 @@ function setLanguage(lang) {
     const toggleEl = document.getElementById('antivirus-toggle');
     const isProtected = toggleEl ? toggleEl.checked : true;
     updateShieldUI(isProtected, lang);
+    
+    // Re-render target profile card with matching translation
+    renderProfilePreview();
 }
 
 // Expose functions to global window scope for direct HTML attribute calls (critical for Wails runtime isolation)
@@ -229,49 +214,304 @@ document.getElementById('save-config-btn').addEventListener('click', async () =>
     }
 });
 
-// Submit Secure Payment via Wails Go bindings
-document.getElementById('payment-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
+// Pre-configured profiles for simplified consumer Antivirus Scanning
+const targetProfiles = {
+    safe: {
+        id: "safe",
+        name: { en: "Aidos K. (Kaspi Transfer)", kk: "Айдос К. (Kaspi аудармасы)", ru: "Айдос К. (Kaspi перевод)" },
+        payload: {
+            user_id: "user_aidos_99",
+            email: "aidos.k@gmail.com",
+            ip: "82.200.1.1", // Kaztelecom legit IP
+            card_bin: "444455", // Legit Visa
+            card_country: "KZ",
+            ip_country: "KZ",
+            amount: 150.00,
+            recipient_phone: "+7 701 555 66 77",
+            recipient_card: "4400 2200 4400 2200",
+            device_fingerprint: "device_macbook_legit_123"
+        },
+        meta: {
+            en: { location: "Almaty, KZ", card: "Visa Classic (KZ)", note: "Legitimate local buyer profile." },
+            kk: { location: "Алматы, Қазақстан", card: "Visa Classic (ҚР)", note: "Жергілікті заңды сатып алушы." },
+            ru: { location: "Алматы, Казахстан", card: "Visa Classic (РК)", note: "Законный местный покупатель." }
+        }
+    },
+    scammer: {
+        id: "scammer",
+        name: { en: "Suspicious Scammer Profile", kk: "Күдікті Алаяқ Профилі", ru: "Подозрительный Профиль Мошенника" },
+        payload: {
+            user_id: "user_scam_malicious",
+            email: "disposable123@temp-mail.org", // Flagged rule: DisposableEmail
+            ip: "198.51.100.42", // Proxy US IP
+            card_bin: "492900", // KZ BIN but IP is US (GeoMismatch!)
+            card_country: "KZ",
+            ip_country: "US", // Mismatch card_country vs ip_country
+            amount: 2500.00, // Anomaly high amount (> 2000)
+            recipient_phone: "+7 777 999 88 11", // Flagged rule: Blacklisted phone in DB
+            recipient_card: "4400 9999 8888 7777",
+            device_fingerprint: "scam_device_emulated_virtual"
+        },
+        meta: {
+            en: { location: "New York, US (IP) / KZ (Card)", card: "KZ Bank Card (Geo-Mismatch)", note: "High anomalies. Recipient phone matched scammer database." },
+            kk: { location: "Нью-Йорк, АҚШ (IP) / ҚР (Карта)", card: "Қазақстандық Карта (Сәйкессіздік)", note: "Күдікті аударма. Алушы телефоны алаяқтар базасында." },
+            ru: { location: "Нью-Йорк, США (IP) / РК (Карта)", card: "Казахстанская Карта (Несовпадение)", note: "Высокие аномалии. Телефон получателя в базе мошенников." }
+        }
+    },
+    bot: {
+        id: "bot",
+        name: { en: "Aggressive Recon Bot", kk: "Автоматты Барлау Бот-шабуылы", ru: "Агрессивный Бот-Разведчик" },
+        payload: {
+            isBot: true,
+            path: "/api/v1/admin/config",
+            ip: "185.220.101.5", // Flagged IP
+            userAgent: "Mozilla/5.0 ScanBot/v9.0 (Malicious Recon Scanner)"
+        },
+        meta: {
+            en: { location: "Frankfurt, DE (Tor Exit Node)", card: "None (Recon probe)", note: "Attempted config exploitation. Immediate automated IP blacklisting." },
+            kk: { location: "Франкфурт, Германия (Tor Node)", card: "Жоқ (Барлау әрекеті)", note: "Құпия файлдарды ұрлау әрекеті. IP бірден бұғатталады." },
+            ru: { location: "Франкфурт, Германия (Tor Node)", card: "Нет (Разведка)", note: "Попытка взлома конфигурации. Автоматический бан IP." }
+        }
+    }
+};
+
+let currentSelectedProfile = "safe";
+
+function renderProfilePreview() {
+    const lang = localStorage.getItem('sananti_lang') || 'en';
+    const previewContainer = document.getElementById('profile-details-card');
+    if (!previewContainer) return;
+
+    const profile = targetProfiles[currentSelectedProfile];
+    if (profile.payload.isBot) {
+        previewContainer.innerHTML = `
+            <div class="preview-row">
+                <span class="preview-label">${lang === 'kk' ? 'Нысана түрі' : (lang === 'ru' ? 'Тип цели' : 'Target Type')}</span>
+                <span class="preview-value" style="color: var(--neon-red); font-weight: bold;">🤖 MALICIOUS BOT / RECON</span>
+            </div>
+            <div class="preview-row">
+                <span class="preview-label">IP Address</span>
+                <span class="preview-value" style="color: var(--neon-purple);">${profile.payload.ip}</span>
+            </div>
+            <div class="preview-row">
+                <span class="preview-label">${lang === 'kk' ? 'Барлау жолы' : (lang === 'ru' ? 'Путь сканирования' : 'Target URL Probe')}</span>
+                <span class="preview-value" style="color: var(--neon-yellow);">${profile.payload.path}</span>
+            </div>
+            <div class="preview-row">
+                <span class="preview-label">${lang === 'kk' ? 'Ерекшелігі' : (lang === 'ru' ? 'Описание угрозы' : 'Threat Detail')}</span>
+                <span class="preview-value" style="color: var(--text-muted); font-size: 0.95em;">${profile.meta[lang].note}</span>
+            </div>
+        `;
+    } else {
+        previewContainer.innerHTML = `
+            <div class="preview-row">
+                <span class="preview-label">${lang === 'kk' ? 'Қолданушы аты' : (lang === 'ru' ? 'Имя отправителя' : 'User Name')}</span>
+                <span class="preview-value" style="color: #fff; font-weight: bold;">${profile.name[lang]}</span>
+            </div>
+            <div class="preview-row">
+                <span class="preview-label">${lang === 'kk' ? 'Аударма сомасы' : (lang === 'ru' ? 'Сумма перевода' : 'Amount')}</span>
+                <span class="preview-value" style="color: var(--neon-purple); font-weight:bold; font-size: 1.1em;">$${profile.payload.amount.toFixed(2)}</span>
+            </div>
+            <div class="preview-row">
+                <span class="preview-label">${lang === 'kk' ? 'Орналасқан жері (IP)' : (lang === 'ru' ? 'Локация (IP)' : 'Location')}</span>
+                <span class="preview-value">${profile.meta[lang].location}</span>
+            </div>
+            <div class="preview-row">
+                <span class="preview-label">${lang === 'kk' ? 'Карта түрі' : (lang === 'ru' ? 'Тип карты' : 'Card Type')}</span>
+                <span class="preview-value">${profile.meta[lang].card}</span>
+            </div>
+            <div class="preview-row">
+                <span class="preview-label">${lang === 'kk' ? 'Алушы телефоны' : (lang === 'ru' ? 'Телефон получателя' : 'Recipient Phone')}</span>
+                <span class="preview-value" style="color: var(--neon-yellow);">${profile.payload.recipient_phone}</span>
+            </div>
+        `;
+    }
+}
+
+async function executeDeepScan() {
+    const isProtected = document.getElementById('antivirus-toggle').checked;
+    const lang = localStorage.getItem('sananti_lang') || 'en';
     const rbox = document.getElementById('result-box');
+    const scanBtn = document.getElementById('trigger-scan-btn');
     
-    const payload = {
-        user_id: document.getElementById('pay-userid').value,
-        email: document.getElementById('pay-email').value,
-        ip: document.getElementById('pay-ip').value,
-        card_bin: document.getElementById('pay-bin').value,
-        card_country: document.getElementById('pay-ccountry').value,
-        ip_country: document.getElementById('pay-ipcountry').value,
-        amount: parseFloat(document.getElementById('pay-amount').value),
-        recipient_phone: document.getElementById('pay-recphone').value,
-        recipient_card: document.getElementById('pay-reccard').value,
-        device_fingerprint: document.getElementById('pay-fingerprint').value
+    if (!isProtected) {
+        const warningMsgs = {
+            en: "⚠️ Active Antivirus Shield is suspended! Please engage the 'System Protection' toggle first.",
+            kk: "⚠️ Белсенді қорғаныс қалқаны сөндірулі! Алдымен 'Жүйе қорғанысы' қосқышын қосыңыз.",
+            ru: "⚠️ Активный экран защиты отключен! Пожалуйста, сначала включите тумблер 'Защита системы' вверху."
+        };
+        alert(warningMsgs[lang]);
+        return;
+    }
+
+    rbox.style.display = 'none';
+    scanBtn.disabled = true;
+    
+    const progressWrapper = document.getElementById('scan-progress-wrapper');
+    const progressFill = document.getElementById('scan-progress-fill');
+    const progressText = document.getElementById('scan-status-indicator');
+    
+    progressWrapper.style.display = 'block';
+    progressText.style.display = 'block';
+    progressFill.style.width = '0%';
+    
+    let progress = 0;
+    const scanLogs = {
+        en: [
+            "Checking blacklist databases...",
+            "Resolving user location and GeoIP...",
+            "Evaluating transaction amount anomalies...",
+            "Finalizing security risk analysis..."
+        ],
+        kk: [
+            "Қара тізім базаларын тексеру...",
+            "Қолданушының орналасуын және GeoIP тексеру...",
+            "Транзакция сомасының ауытқуларын бағалау...",
+            "Қауіпсіздік есебін шығару..."
+        ],
+        ru: [
+            "Проверка баз данных черного списка...",
+            "Определение геолокации и GeoIP...",
+            "Оценка аномалий суммы перевода...",
+            "Финальный расчет рисков..."
+        ]
     };
 
-    try {
-        // Direct call to Go binding
-        const resJSON = await window.go.main.App.ScanTransaction(JSON.stringify(payload));
-        const data = JSON.parse(resJSON);
+    const interval = setInterval(async () => {
+        progress += 10;
+        progressFill.style.width = progress + '%';
         
-        rbox.style.display = 'block';
+        let logIndex = 0;
+        if (progress > 25) logIndex = 1;
+        if (progress > 60) logIndex = 2;
+        if (progress > 90) logIndex = 3;
         
-        if (data.status === 'success') {
-            rbox.style.background = 'rgba(0, 255, 204, 0.1)';
-            rbox.style.border = '1px solid var(--neon-cyan)';
-            rbox.innerHTML = "<strong>🟢 Transaction Approved!</strong><br/>" +
-                "Recommendation: <span class=\"badge badge-approve\">" + data.recommendation + "</span><br/>" +
-                "Risk Score: <strong>" + data.risk_score + "</strong>";
-        } else {
-            rbox.style.background = 'rgba(255, 85, 85, 0.1)';
-            rbox.style.border = '1px solid var(--neon-red)';
-            rbox.innerHTML = "<strong>🔴 Transaction Blocked!</strong><br/>" +
-                "Recommendation: <span class=\"badge badge-block\">" + data.recommendation + "</span><br/>" +
-                "Risk Score: <strong>" + data.risk_score + "</strong><br/>" +
-                "<span style=\"font-size:0.85em;color:var(--text-muted);\">Reasons: " + data.reasons.join(', ') + "</span>";
+        progressText.innerText = `🔍 ${scanLogs[lang][logIndex]} ${progress}%`;
+        
+        if (progress >= 100) {
+            clearInterval(interval);
+            progressWrapper.style.display = 'none';
+            progressText.style.display = 'none';
+            scanBtn.disabled = false;
+            
+            // Execute the scan call
+            const profile = targetProfiles[currentSelectedProfile];
+            rbox.style.display = 'block';
+            
+            if (profile.payload.isBot) {
+                // Simulate Honeytoken trap trigger
+                try {
+                    const resJSON = await window.go.main.App.TriggerHoneytokenBlock(profile.payload.ip, profile.payload.path);
+                    const res = JSON.parse(resJSON);
+                    rbox.style.background = 'rgba(255, 85, 127, 0.15)';
+                    rbox.style.border = '2px solid var(--neon-red)';
+                    rbox.style.boxShadow = '0 0 20px rgba(255, 85, 127, 0.35)';
+                    
+                    const botTitles = {
+                        en: "🛑 CRITICAL ATTACK STOPPED: BOT BLACKLISTED!",
+                        kk: "🛑 ШАБУЫЛ ТОҚТАТЫЛДЫ: БОТ БҰҒАТТАЛДЫ!",
+                        ru: "🛑 АТАКА ПРЕДОТВРАЩЕНА: БОТ ЗАБЛОКИРОВАН!"
+                    };
+                    const botDetails = {
+                        en: `IP: <strong>${profile.payload.ip}</strong> has been instantly banned. Reason: ${res.message}`,
+                        kk: `IP: <strong>${profile.payload.ip}</strong> бірден қара тізімге салынды. Себебі: ${res.message}`,
+                        ru: `IP: <strong>${profile.payload.ip}</strong> мгновенно забанен. Причина: ${res.message}`
+                    };
+                    rbox.innerHTML = `<strong style="color:var(--neon-red);font-size:1.1em;">${botTitles[lang]}</strong><br/>` +
+                                     `<p style="margin: 8px 0 0 0; font-size:0.9em;">${botDetails[lang]}</p>`;
+                } catch(e) {
+                    console.error(e);
+                }
+            } else {
+                // Normal anti-fraud transaction scan
+                try {
+                    const resJSON = await window.go.main.App.ScanTransaction(JSON.stringify(profile.payload));
+                    const data = JSON.parse(resJSON);
+                    
+                    if (data.status === 'success') {
+                        rbox.style.background = 'rgba(0, 255, 204, 0.12)';
+                        rbox.style.border = '2px solid var(--neon-cyan)';
+                        rbox.style.boxShadow = '0 0 20px rgba(0, 255, 204, 0.35)';
+                        
+                        const safeTitles = {
+                            en: "🟢 SYSTEM SECURE: TRANSACTION APPROVED",
+                            kk: "🟢 ЖҮЙЕ ҚАУІПСІЗ: ТӨЛЕМ ҚАБЫЛДАНДЫ",
+                            ru: "🟢 БЕЗОПАСНО: ПЕРЕВОД ОДОБРЕН"
+                        };
+                        const safeDetails = {
+                            en: `Risk Score: <strong>${(data.risk_score * 100).toFixed(0)}%</strong>. System found no anomalies. Transfer safe.`,
+                            kk: `Қауіп деңгейі: <strong>${(data.risk_score * 100).toFixed(0)}%</strong>. Жүйе ешқандай аномалия тапқан жоқ. Аударма қауіпсіз.`,
+                            ru: `Уровень риска: <strong>${(data.risk_score * 100).toFixed(0)}%</strong>. Система не обнаружила аномалий. Перевод безопасен.`
+                        };
+                        
+                        rbox.innerHTML = `<strong style="color:var(--neon-cyan);font-size:1.1em;">${safeTitles[lang]}</strong><br/>` +
+                                         `<p style="margin: 8px 0 0 0; font-size:0.9em;">${safeDetails[lang]}</p>`;
+                    } else {
+                        rbox.style.background = 'rgba(255, 85, 127, 0.15)';
+                        rbox.style.border = '2px solid var(--neon-red)';
+                        rbox.style.boxShadow = '0 0 20px rgba(255, 85, 127, 0.35)';
+                        
+                        const blockTitles = {
+                            en: "🛑 THREAT INTERCEPTED: SCAMMER BLOCKED!",
+                            kk: "🛑 ҚАУІП ТОҚТАТЫЛДЫ: АЛАЯҚ БҰҒАТТАЛДЫ!",
+                            ru: "🛑 УГРОЗА ПЕРЕХВАЧЕНА: МОШЕННИК ЗАБЛОКИРОВАН!"
+                        };
+                        
+                        const reasonsTransl = {
+                            "[GeoMismatchCheck]": {
+                                en: "🌍 Card vs IP Country Mismatch (GeoIP evasion)",
+                                kk: "🌍 Карта мен IP елінің сәйкессіздігі (Геолокацияны алдау)",
+                                ru: "🌍 Несовпадение страны карты и IP (Обход GeoIP)"
+                            },
+                            "[AmountAnomalyCheck]": {
+                                en: "💰 Suspiciously high transfer amount anomaly",
+                                kk: "💰 Аударма сомасының күдікті тым жоғары болуы",
+                                ru: "💰 Аномально высокая сумма перевода"
+                            },
+                            "[EmailDomainRiskCheck]": {
+                                en: "📧 Temporary disposable email address domain",
+                                kk: "📧 Уақытша электрондық пошта домені",
+                                ru: "📧 Одноразовый временный почтовый ящик"
+                            },
+                            "[RecipientBlacklistCheck]": {
+                                en: "📞 Recipient Phone matches known database scammer list",
+                                kk: "📞 Алушы телефоны алаяқтардың қара тізімінде тұр",
+                                ru: "📞 Телефон получателя в черном списке мошенников"
+                            }
+                        };
+
+                        let translatedReasons = [];
+                        data.reasons.forEach(r => {
+                            let matched = false;
+                            Object.keys(reasonsTransl).forEach(k => {
+                                if (r.includes(k)) {
+                                    translatedReasons.push(reasonsTransl[k][lang]);
+                                    matched = true;
+                                }
+                            });
+                            if (!matched) {
+                                translatedReasons.push(r);
+                            }
+                        });
+
+                        const riskPercent = (data.risk_score * 100).toFixed(0);
+                        
+                        rbox.innerHTML = `<strong style="color:var(--neon-red);font-size:1.1em;">${blockTitles[lang]}</strong><br/>` +
+                                         `<p style="margin: 8px 0; font-size:0.9em;">` +
+                                         `${lang === 'kk' ? 'Алаяқтық деңгейі' : (lang === 'ru' ? 'Уровень мошенничества' : 'Scam Risk Score')}: <strong style="color:var(--neon-red);">${riskPercent}%</strong>` +
+                                         `</p>` +
+                                         `<div style="font-size:0.8em; color:var(--text-muted); line-height: 1.4; border-top: 1px solid rgba(255,255,255,0.08); padding-top:8px;">` +
+                                         `<strong style="color:#fff; display:block; margin-bottom:4px;">${lang === 'kk' ? 'Табылған қауіптер:' : (lang === 'ru' ? 'Обнаруженные угрозы:' : 'Detected Flags:')}</strong>` +
+                                         translatedReasons.map(r => `• ${r}`).join('<br/>') +
+                                         `</div>`;
+                    }
+                } catch(e) {
+                    console.error(e);
+                }
+            }
         }
-    } catch (err) {
-        console.error("Wails scan error", err);
-    }
-});
+    }, 120);
+}
 
 // Decoy trap trigger simulation via Wails Go bindings
 async function triggerTrap(path) {
@@ -347,8 +587,29 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // 4. Target profile switcher tabs listener
+    document.querySelectorAll('.profile-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentSelectedProfile = tab.getAttribute('data-target');
+            renderProfilePreview();
+        });
+    });
+
+    // 5. Antivirus deep scan executor listener
+    const scanBtn = document.getElementById('trigger-scan-btn');
+    if (scanBtn) {
+        scanBtn.addEventListener('click', () => {
+            executeDeepScan();
+        });
+    }
+
     const savedLang = localStorage.getItem('sananti_lang') || 'en';
     setLanguage(savedLang);
+    
+    // Initial profile preview rendering
+    renderProfilePreview();
     
     // Initial fetch of configuration parameters
     setTimeout(loadConfig, 100);
