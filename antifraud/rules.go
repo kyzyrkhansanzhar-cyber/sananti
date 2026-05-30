@@ -241,10 +241,13 @@ func NewRecipientBlacklistRule() *RecipientBlacklistRule {
 		"87777777777":  true,
 		"+77079998877": true,
 		"87079998877":  true,
+		"+77779998811": true,
+		"87779998811":  true,
 	}
 	cards := map[string]bool{
 		"4400551122334455": true,
 		"4111112222222222": true,
+		"4400999988887777": true,
 	}
 	return &RecipientBlacklistRule{
 		scamPhones: phones,

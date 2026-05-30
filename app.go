@@ -161,6 +161,66 @@ func (a *App) ScanTransaction(txJSON string) string {
 	return string(data)
 }
 
+// StartDeepScan runs an asynchronous deep scanning simulation powered by Go Goroutines,
+// emitting real-time progress percentages and system logs back to the frontend.
+func (a *App) StartDeepScan(profileID string, payloadJSON string) {
+	go func() {
+		// Define the scanning steps based on the target profile
+		var steps []map[string]interface{}
+
+		if profileID == "safe" {
+			steps = []map[string]interface{}{
+				{"progress": 25, "log": "[INFO] Checking blacklist databases: IP 82.200.1.1 is clean."},
+				{"progress": 50, "log": "[INFO] Resolving user location: GeoIP lookup matches billing country (KZ)."},
+				{"progress": 75, "log": "[INFO] Evaluating transaction amount: $150.00 is well within limits."},
+				{"progress": 100, "log": "[SUCCESS] Deep Scan complete. 0% anomalies. Transaction approved."},
+			}
+		} else if profileID == "scammer" {
+			steps = []map[string]interface{}{
+				{"progress": 25, "log": "[WARNING] GeoMismatchCheck: Card billing country (KZ) does not match transaction IP country (US)!"},
+				{"progress": 50, "log": "[CRITICAL] RecipientBlacklistCheck: Recipient card 4400999988887777 matched blacklisted scammer/mule record!"},
+				{"progress": 75, "log": "[WARNING] AmountAnomalyCheck: $2500.00 exceeds single-payment safety limits!"},
+				{"progress": 100, "log": "[CRITICAL] Deep Scan complete. Threat detected. Emergency Lock Dispatching!"},
+			}
+		} else { // "bot"
+			steps = []map[string]interface{}{
+				{"progress": 25, "log": "[WARNING] IPBlacklistCheck: Client IP 185.220.101.5 is a known Tor Exit Node!"},
+				{"progress": 50, "log": "[CRITICAL] HeaderReputationCheck: Headless ScanBot/v9.0 automation tool signature detected!"},
+				{"progress": 75, "log": "[CRITICAL] HoneytokenDecoyCheck: Probe detected on secure decoy path /api/v1/admin/config!"},
+				{"progress": 100, "log": "[CRITICAL] Deep Scan complete. Attack intercepted. Isolated by automated firewall ban!"},
+			}
+		}
+
+		// Sequential execution of simulated scan layers
+		for _, step := range steps {
+			time.Sleep(500 * time.Millisecond) // Simulating high-fidelity layer-by-layer processing
+			runtime.EventsEmit(a.ctx, "scan_progress", step)
+		}
+
+		time.Sleep(200 * time.Millisecond)
+
+		// Execute final actions at 100%
+		if profileID == "bot" {
+			var botPayload struct {
+				IP   string `json:"ip"`
+				Path string `json:"path"`
+			}
+			_ = json.Unmarshal([]byte(payloadJSON), &botPayload)
+			if botPayload.IP == "" {
+				botPayload.IP = "185.220.101.5"
+			}
+			if botPayload.Path == "" {
+				botPayload.Path = "/api/v1/admin/config"
+			}
+			a.TriggerHoneytokenBlock(botPayload.IP, botPayload.Path)
+		} else {
+			// legit or scammer
+			resJSON := a.ScanTransaction(payloadJSON)
+			runtime.EventsEmit(a.ctx, "scan_complete", resJSON)
+		}
+	}()
+}
+
 // GetLiveLogs reads the latest security rotation logs from disk and returns them.
 func (a *App) GetLiveLogs() string {
 	logFilePath := "logs/sananti_alerts.log"
