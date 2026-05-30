@@ -102,9 +102,9 @@ func main() {
 				<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 				<style>
 					:root {
-						--bg-primary: radial-gradient(circle at center, #111122 0%%, #06060c 100%%);
-						--card-bg: rgba(255, 255, 255, 0.03);
-						--card-border: rgba(255, 255, 255, 0.07);
+						--bg-primary: #0a0a14;
+						--card-bg: rgba(18, 18, 36, 0.45);
+						--card-border: rgba(255, 255, 255, 0.08);
 						--neon-cyan: #00ffcc;
 						--neon-purple: #bd93f9;
 						--neon-red: #ff5555;
@@ -113,14 +113,46 @@ func main() {
 						--text-muted: #8b92a6;
 					}
 					body {
-						background: var(--bg-primary);
+						background-color: var(--bg-primary);
+						background-image: radial-gradient(circle at 50%% 50%%, #12122b 0%%, #06060c 100%%);
 						color: var(--text-main);
 						font-family: 'Inter', -apple-system, sans-serif;
 						margin: 0;
 						padding: 40px 20px;
 						min-height: 100vh;
 						box-sizing: border-box;
+						overflow-x: hidden;
+						position: relative;
 					}
+					
+					/* Floating Neon 3D Ambient Orbs */
+					.bg-orb {
+						position: fixed;
+						width: 450px;
+						height: 450px;
+						border-radius: 50%%;
+						filter: blur(140px);
+						z-index: -1;
+						opacity: 0.22;
+						pointer-events: none;
+						animation: orbFloat 22s infinite alternate ease-in-out;
+					}
+					.orb-1 {
+						background: var(--neon-purple);
+						top: -10%%;
+						left: -10%%;
+					}
+					.orb-2 {
+						background: var(--neon-cyan);
+						bottom: -10%%;
+						right: -10%%;
+						animation-delay: -11s;
+					}
+					@keyframes orbFloat {
+						0%% { transform: translate(0, 0) scale(1); }
+						100%% { transform: translate(120px, 60px) scale(1.25); }
+					}
+
 					.container {
 						max-width: 1200px;
 						margin: 0 auto;
@@ -136,6 +168,7 @@ func main() {
 						border: 1px solid var(--card-border);
 						border-radius: 20px;
 						padding: 4px;
+						box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 					}
 					.lang-btn {
 						background: transparent;
@@ -152,33 +185,57 @@ func main() {
 					.lang-btn.active {
 						background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
 						color: #0c0c14;
+						box-shadow: 0 4px 12px rgba(0, 255, 204, 0.3);
 					}
 					header {
 						text-align: center;
-						margin-bottom: 30px;
+						margin-bottom: 40px;
 					}
 					h1 {
 						font-family: 'Outfit', sans-serif;
-						font-size: 3.2em;
+						font-size: 3.5em;
 						font-weight: 800;
 						margin: 0;
 						background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
 						-webkit-background-clip: text;
 						-webkit-text-fill-color: transparent;
-						letter-spacing: -1.5px;
+						letter-spacing: -2px;
+						filter: drop-shadow(0 4px 10px rgba(0, 255, 204, 0.15));
 					}
 					p.subtitle {
 						color: var(--text-muted);
-						font-size: 1.1em;
+						font-size: 1.15em;
 						margin-top: 10px;
+						font-weight: 400;
 					}
-					.top-config-bar {
-						background: rgba(255, 255, 255, 0.02);
+					
+					/* Premium 3D Floating Glass Cards */
+					.top-config-bar, .card {
+						background: var(--card-bg);
+						backdrop-filter: blur(25px) saturate(180%%);
+						-webkit-backdrop-filter: blur(25px) saturate(180%%);
 						border: 1px solid var(--card-border);
-						border-radius: 16px;
-						padding: 25px;
+						border-radius: 24px;
+						padding: 30px;
+						box-shadow: 
+							0 25px 50px -12px rgba(0, 0, 0, 0.6), 
+							inset 0 1px 0 rgba(255, 255, 255, 0.12),
+							0 0 40px rgba(189, 147, 249, 0.04);
+						transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.5s, border-color 0.3s;
+						transform-style: preserve-3d;
+						perspective: 1000px;
+					}
+					.top-config-bar:hover, .card:hover {
+						transform: translateY(-8px) rotateX(1.5deg) rotateY(0.8deg);
+						border-color: rgba(0, 255, 204, 0.25);
+						box-shadow: 
+							0 40px 80px -15px rgba(0, 0, 0, 0.8),
+							0 0 35px rgba(0, 255, 204, 0.08), 
+							inset 0 1px 0 rgba(255, 255, 255, 0.22);
+					}
+
+					.top-config-bar {
 						margin-bottom: 30px;
-						box-shadow: 0 4px 30px rgba(0,0,0,0.3);
 					}
 					.config-grid {
 						display: grid;
@@ -191,7 +248,7 @@ func main() {
 					.rules-grid {
 						display: grid;
 						grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-						gap: 10px;
+						gap: 12px;
 					}
 					.rule-checkbox {
 						display: flex;
@@ -199,6 +256,14 @@ func main() {
 						font-size: 0.85em;
 						color: var(--text-main);
 						cursor: pointer;
+						background: rgba(255, 255, 255, 0.02);
+						padding: 8px 12px;
+						border-radius: 8px;
+						border: 1px solid rgba(255, 255, 255, 0.03);
+						transition: background 0.2s;
+					}
+					.rule-checkbox:hover {
+						background: rgba(0, 255, 204, 0.05);
 					}
 					.rule-checkbox input {
 						width: auto;
@@ -214,100 +279,110 @@ func main() {
 					@media (max-width: 900px) {
 						.grid { grid-template-columns: 1fr; }
 					}
-					.card {
-						background: var(--card-bg);
-						backdrop-filter: blur(16px);
-						border: 1px solid var(--card-border);
-						border-radius: 20px;
-						padding: 30px;
-						box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-						transition: border-color 0.2s;
-					}
-					.card:hover {
-						border-color: rgba(0, 255, 204, 0.15);
-					}
 					h2 {
 						font-family: 'Outfit', sans-serif;
 						margin-top: 0;
-						font-size: 1.5em;
+						font-size: 1.6em;
+						font-weight: 700;
 						border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-						padding-bottom: 12px;
+						padding-bottom: 15px;
 						color: var(--neon-cyan);
+						letter-spacing: -0.5px;
+						text-shadow: 0 0 10px rgba(0, 255, 204, 0.25);
 					}
 					.form-group {
-						margin-bottom: 15px;
+						margin-bottom: 18px;
 					}
 					label {
 						display: block;
-						font-size: 0.8em;
+						font-size: 0.78em;
 						text-transform: uppercase;
 						color: var(--text-muted);
-						margin-bottom: 6px;
-						font-weight: 600;
-						letter-spacing: 0.5px;
+						margin-bottom: 8px;
+						font-weight: 700;
+						letter-spacing: 1px;
 					}
+					
+					/* Neumorphic Inner Shadow Inputs */
 					input, select, textarea {
 						width: 100%%;
-						background: rgba(255, 255, 255, 0.04);
-						border: 1px solid rgba(255, 255, 255, 0.12);
-						border-radius: 8px;
-						padding: 10px;
+						background: rgba(0, 0, 0, 0.35);
+						border: 1px solid rgba(255, 255, 255, 0.08);
+						border-radius: 12px;
+						padding: 12px 14px;
 						color: #fff;
 						font-family: 'Inter', sans-serif;
 						font-size: 0.95em;
 						box-sizing: border-box;
 						outline: none;
+						box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+						transition: all 0.3s ease;
 					}
-					input:focus, select:focus {
+					input:focus, select:focus, textarea:focus {
 						border-color: var(--neon-cyan);
+						background: rgba(0, 0, 0, 0.45);
+						box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 255, 204, 0.2);
 					}
+					
+					/* Glorious 3D Bouncy Buttons */
 					button {
 						background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
 						border: none;
-						border-radius: 8px;
-						padding: 12px;
+						border-radius: 12px;
+						padding: 14px;
 						color: #0c0c14;
-						font-weight: 700;
+						font-weight: 800;
 						font-size: 1.05em;
 						cursor: pointer;
-						transition: transform 0.1s, opacity 0.2s;
+						box-shadow: 0 6px 20px rgba(0, 255, 204, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+						text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+						transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 					}
 					button:hover {
-						transform: scale(1.01);
-						opacity: 0.95;
+						transform: translateY(-3px);
+						box-shadow: 0 12px 28px rgba(0, 255, 204, 0.5), 0 0 20px rgba(189, 147, 249, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5);
 					}
+					button:active {
+						transform: translateY(1px);
+						box-shadow: 0 4px 10px rgba(0, 255, 204, 0.2);
+					}
+					
 					.trap-link {
 						display: inline-block;
-						background: rgba(255, 85, 85, 0.08);
-						border: 1px solid rgba(255, 85, 85, 0.18);
+						background: rgba(255, 85, 85, 0.06);
+						border: 1px solid rgba(255, 85, 85, 0.15);
 						color: var(--neon-red);
 						text-decoration: none;
-						padding: 10px 15px;
-						border-radius: 8px;
+						padding: 10px 18px;
+						border-radius: 10px;
 						margin-right: 10px;
 						margin-bottom: 10px;
 						font-family: 'Fira Code', monospace;
 						font-size: 0.85em;
+						transition: all 0.2s;
 					}
 					.trap-link:hover {
 						background: rgba(255, 85, 85, 0.15);
+						box-shadow: 0 0 15px rgba(255, 85, 85, 0.25);
+						transform: translateY(-2px);
 					}
 					.console-container {
-						background: #08080d;
-						border: 1px solid rgba(255, 255, 255, 0.04);
-						border-radius: 12px;
+						background: rgba(0, 0, 0, 0.4);
+						border: 1px solid rgba(255, 255, 255, 0.05);
+						border-radius: 16px;
 						padding: 20px;
 						font-family: 'Fira Code', monospace;
 						font-size: 0.85em;
 						max-height: 250px;
 						overflow-y: auto;
 						color: #a9b1d6;
+						box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
 					}
 					.console-line {
 						margin-bottom: 8px;
 						white-space: pre-wrap;
 					}
-					.severity-critical { color: var(--neon-red); font-weight: bold; }
+					.severity-critical { color: var(--neon-red); font-weight: bold; text-shadow: 0 0 8px rgba(255, 85, 85, 0.35); }
 					.severity-warning { color: var(--neon-yellow); font-weight: bold; }
 					.severity-info { color: var(--neon-cyan); }
 					.badge {
@@ -330,8 +405,13 @@ func main() {
 					#result-box {
 						margin-top: 20px;
 						padding: 15px;
-						border-radius: 8px;
+						border-radius: 12px;
 						display: none;
+						animation: slideUp 0.3s ease;
+					}
+					@keyframes slideUp {
+						from { opacity: 0; transform: translateY(10px); }
+						to { opacity: 1; transform: translateY(0); }
 					}
 					.metrics-btn {
 						display: inline-block;
@@ -339,14 +419,18 @@ func main() {
 						border: 1px solid rgba(189, 147, 249, 0.25);
 						color: var(--neon-purple);
 						text-decoration: none;
-						padding: 8px 16px;
-						border-radius: 8px;
+						padding: 10px 20px;
+						border-radius: 10px;
 						font-family: 'Fira Code', monospace;
 						font-size: 0.85em;
 						margin-top: 15px;
+						transition: all 0.2s;
+						box-shadow: 0 4px 10px rgba(189, 147, 249, 0.1);
 					}
 					.metrics-btn:hover {
 						background: rgba(189, 147, 249, 0.2);
+						box-shadow: 0 0 15px rgba(189, 147, 249, 0.25);
+						transform: translateY(-2px);
 					}
 					.slider-container {
 						display: flex;
@@ -358,17 +442,23 @@ func main() {
 						font-weight: 700;
 						color: var(--neon-cyan);
 						font-size: 1.1em;
+						text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
 					}
 					.resolved-badge {
 						font-family: 'Fira Code', monospace;
 						font-size: 0.8em;
 						color: var(--neon-cyan);
-						margin-top: 6px;
+						margin-top: 8px;
 						display: none;
+						text-shadow: 0 0 8px rgba(0, 255, 204, 0.3);
 					}
 				</style>
 			</head>
 			<body>
+				<!-- Floating Background Orbs for Parallax 3D Effect -->
+				<div class="bg-orb orb-1"></div>
+				<div class="bg-orb orb-2"></div>
+
 				<div class="container">
 					<!-- Sleek Multi-Language Toggles -->
 					<div class="lang-container">
