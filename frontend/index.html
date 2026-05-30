@@ -24,22 +24,46 @@
             <p class="subtitle" data-i18n="subtitle">Active Cyber-Deception Shield & Anti-Fraud Desktop Console</p>
         </header>
 
-        <!-- Configuration Panel -->
+        <!-- Antivirus Status Hub & Config Panel -->
         <div class="top-config-bar">
             <div class="config-grid">
-                <div>
-                    <label data-i18n="threshold">🛑 Block Threat Threshold</label>
-                    <div class="slider-container">
-                        <input type="range" id="config-threshold" min="0.10" max="1.00" step="0.05" value="0.70" oninput="document.getElementById('threshold-display').innerText = parseFloat(this.value).toFixed(2)">
-                        <span class="slider-val" id="threshold-display">0.70</span>
+                <!-- Left: Antivirus Style Shield Status -->
+                <div class="shield-hub-card">
+                    <h3 data-i18n="shieldTitle" class="hub-title">🚀 Active Deception & Antivirus Hub</h3>
+                    <div class="shield-container">
+                        <div class="shield-glow" id="shield-glow-effect"></div>
+                        <div class="shield-radar" id="shield-radar-effect"></div>
+                        <div class="shield-icon" id="shield-visual-icon">🛡️</div>
                     </div>
-                    <button id="save-config-btn" data-i18n="saveSettings" style="margin-top: 15px; padding: 8px 16px; font-size: 0.9em; width: auto;">Save Settings</button>
+                    <div class="shield-status-info">
+                        <div class="shield-status-badge protected" id="shield-status-text" data-i18n="statusProtected">SYSTEM PROTECTED</div>
+                        <p class="shield-status-desc" id="shield-status-desc" data-i18n="statusProtectedDesc">Decoy honeytokens armed. Anti-fraud analysis active. Real-time interception enabled.</p>
+                    </div>
+                    <div class="toggle-switch-container">
+                        <span class="toggle-label" data-i18n="toggleShield">Engage System Protection</span>
+                        <label class="switch">
+                            <input type="checkbox" id="antivirus-toggle" checked onchange="toggleProtection(this.checked)">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
                 </div>
-                <div>
-                    <label data-i18n="activeRules">🛡️ Active Scanning Risk Rules</label>
-                    <div class="rules-grid" id="rules-toggles-container">
-                        <!-- Loaded dynamically via Go bindings -->
+                
+                <!-- Right: Threshold Slider and Active Rules -->
+                <div class="settings-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <label data-i18n="threshold" style="margin-bottom: 12px;">🛑 Block Threat Threshold</label>
+                        <div class="slider-container" style="margin-bottom: 20px;">
+                            <input type="range" id="config-threshold" min="0.10" max="1.00" step="0.05" value="0.70" oninput="document.getElementById('threshold-display').innerText = parseFloat(this.value).toFixed(2)">
+                            <span class="slider-val" id="threshold-display">0.70</span>
+                        </div>
                     </div>
+                    <div>
+                        <label data-i18n="activeRules" style="margin-bottom: 12px;">🛡️ Active Scanning Risk Rules</label>
+                        <div class="rules-grid" id="rules-toggles-container">
+                            <!-- Loaded dynamically via Go bindings -->
+                        </div>
+                    </div>
+                    <button id="save-config-btn" data-i18n="saveSettings" style="margin-top: 20px; padding: 12px 20px; font-size: 0.95em;">Save Settings</button>
                 </div>
             </div>
         </div>

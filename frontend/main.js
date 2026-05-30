@@ -20,7 +20,13 @@ const translations = {
         submitPayment: "Submit Secure Payment",
         decoyTitle: "🍯 Deceptive Decoy Traps",
         decoyDesc: "Decoys scan for malicious bots and reconnaissance. Triggering traps instantly blacklists your IP.",
-        consoleTitle: "📜 Live Security Alerts Console"
+        consoleTitle: "📜 Live Security Alerts Console",
+        shieldTitle: "🚀 Active Deception & Antivirus Hub",
+        statusProtected: "SYSTEM PROTECTED",
+        statusSuspended: "PROTECTION SUSPENDED",
+        statusProtectedDesc: "Decoy honeytokens armed. Anti-fraud analysis active. Real-time interception enabled.",
+        statusSuspendedDesc: "Warning: System vulnerable. Real-time scammer filters and honeytoken traps are deactivated.",
+        toggleShield: "Engage System Protection"
     },
     kk: {
         title: "🛡️ SANANTI ЦИФРЛЫҚ КҮЗЕТШІ",
@@ -42,7 +48,13 @@ const translations = {
         submitPayment: "Қауіпсіз Төлемді Жіберу",
         decoyTitle: "🍯 Алдарқату Тұзақтары",
         decoyDesc: "Тұзақтар автоматты боттарды және барлау әрекеттерін бақылайды. Оларды басу IP-ді бірден қара тізімге салады.",
-        consoleTitle: "📜 Қауіпсіздік Ескертулері Консолі"
+        consoleTitle: "📜 Қауіпсіздік Ескертулері Консолі",
+        shieldTitle: "🚀 Тұзақтар мен Антивирус Орталығы",
+        statusProtected: "ЖҮЙЕ ҚОРҒАЛҒАН",
+        statusSuspended: "ҚОРҒАНЫС ТОҚТАТЫЛДЫ",
+        statusProtectedDesc: "Алдарқату тұзақтары белсенді. Анти-фрод сканерлеу қосулы. Қауіптер бірден бұғатталады.",
+        statusSuspendedDesc: "Ескерту: Жүйе қорғаусыз. Алаяқтық сүзгілері мен алдарқату тұзақтары өшірілген.",
+        toggleShield: "Қорғаныс қалқанын қосу"
     },
     ru: {
         title: "🛡️ SANANTI ЦИФРОВОЙ СТРАЖ",
@@ -64,9 +76,79 @@ const translations = {
         submitPayment: "Отправить Безопасный Платеж",
         decoyTitle: "🍯 Обманные Ловушки-Приманки",
         decoyDesc: "Ловушки выявляют вредоносных ботов и разведку. Активация ловушек мгновенно блокирует ваш IP.",
-        consoleTitle: "📜 Консоль Уведомлений Безопасности"
+        consoleTitle: "📜 Консоль Уведомлений Безопасности",
+        shieldTitle: "🚀 Центр Защиты и Антивируса",
+        statusProtected: "СИСТЕМА ЗАЩИЩЕНА",
+        statusSuspended: "ЗАЩИТА ПРИОСТАНОВЛЕНА",
+        statusProtectedDesc: "Приманки взведены. Анти-фрод сканер активен. Угрозы блокируются мгновенно.",
+        statusSuspendedDesc: "Внимание: Система уязвима. Фильтры мошенников и ловушки-приманки отключены.",
+        toggleShield: "Включить Защитный Экран"
     }
 };
+
+// Dynamic Antivirus Shield UI update handler
+function updateShieldUI(isProtected, lang) {
+    const shieldIcon = document.getElementById('shield-visual-icon');
+    const shieldStatusText = document.getElementById('shield-status-text');
+    const shieldStatusDesc = document.getElementById('shield-status-desc');
+    const shieldGlow = document.getElementById('shield-glow-effect');
+    const shieldRadar = document.getElementById('shield-radar-effect');
+    
+    if (!shieldIcon || !shieldStatusText || !shieldStatusDesc) return;
+    
+    if (isProtected) {
+        shieldIcon.innerText = "🛡️";
+        shieldIcon.style.transform = "scale(1)";
+        
+        shieldStatusText.className = "shield-status-badge protected";
+        shieldStatusText.innerText = translations[lang].statusProtected;
+        shieldStatusDesc.innerText = translations[lang].statusProtectedDesc;
+        
+        shieldGlow.style.background = "radial-gradient(circle, var(--neon-cyan) 0%, rgba(167, 139, 250, 0) 70%)";
+        shieldGlow.style.animationPlayState = "running";
+        shieldRadar.style.borderColor = "var(--neon-cyan)";
+        shieldRadar.style.animationPlayState = "running";
+    } else {
+        shieldIcon.innerText = "⚠️";
+        shieldIcon.style.transform = "scale(0.9) rotate(-10deg)";
+        
+        shieldStatusText.className = "shield-status-badge suspended";
+        shieldStatusText.innerText = translations[lang].statusSuspended;
+        shieldStatusDesc.innerText = translations[lang].statusSuspendedDesc;
+        
+        shieldGlow.style.background = "radial-gradient(circle, var(--neon-red) 0%, rgba(167, 139, 250, 0) 70%)";
+        shieldGlow.style.animationPlayState = "paused";
+        shieldRadar.style.borderColor = "var(--neon-red)";
+        shieldRadar.style.animationPlayState = "paused";
+    }
+}
+
+// Antivirus dynamic system protection toggler
+function toggleProtection(active) {
+    const lang = localStorage.getItem('sananti_lang') || 'en';
+    updateShieldUI(active, lang);
+    
+    // Disable/enable config settings logically to make it feel like a real interactive app
+    const thresholdInput = document.getElementById('config-threshold');
+    const saveBtn = document.getElementById('save-config-btn');
+    const cbs = document.querySelectorAll('.rule-toggle-cb');
+    
+    if (thresholdInput) thresholdInput.disabled = !active;
+    if (saveBtn) saveBtn.disabled = !active;
+    cbs.forEach(cb => cb.disabled = !active);
+    
+    // Add dynamic log entry to console
+    const consoleBox = document.getElementById('logs-console');
+    if (consoleBox) {
+        const timeStr = new Date().toTimeString().slice(0, 8);
+        if (active) {
+            consoleBox.innerHTML += `<div class="console-line">[${timeStr}] [<span class="severity-info">SYSTEM</span>] 🛡️ Antivirus Active-Deception Protection engaged. All filters online.</div>`;
+        } else {
+            consoleBox.innerHTML += `<div class="console-line">[${timeStr}] [<span class="severity-critical">SYSTEM</span>] ⚠️ Warning: Antivirus protection suspended. Scammer check scanner offline.</div>`;
+        }
+        consoleBox.scrollTop = consoleBox.scrollHeight;
+    }
+}
 
 // Language switcher controller
 function setLanguage(lang) {
@@ -87,7 +169,18 @@ function setLanguage(lang) {
             el.innerHTML = translations[lang][key];
         }
     });
+    
+    // Also re-apply dynamic antivirus status in current language
+    const toggleEl = document.getElementById('antivirus-toggle');
+    const isProtected = toggleEl ? toggleEl.checked : true;
+    updateShieldUI(isProtected, lang);
 }
+
+// Expose functions to global window scope for direct HTML attribute calls (critical for Wails runtime isolation)
+window.setLanguage = setLanguage;
+window.triggerTrap = triggerTrap;
+window.toggleProtection = toggleProtection;
+window.updateShieldUI = updateShieldUI;
 
 // Fetch configurations from Wails Go bindings
 async function loadConfig() {
