@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 	"sync"
@@ -13,6 +14,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"sananti/antifraud"
 	"sananti/core"
+	"sananti/middleware"
 )
 
 // App struct represents the Wails desktop backend controller.
@@ -81,6 +83,84 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	// Launch background Goroutine real-time event-driven scanner thread
 	go a.backgroundScannerLoop()
+
+	// Start local scan HTTP server to allow external triggers (e.g. from mobile browser)
+	go a.startLocalScanServer()
+}
+
+// startLocalScanServer launches a lightweight, concurrent HTTP server on port 8080.
+// This allows other devices (like a Samsung Z Flip 7) on the same Wi-Fi to submit
+// real-time scan requests to the MacBook Go backend and trigger the emergency lock modal.
+func (a *App) startLocalScanServer() {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/scan", func(w http.ResponseWriter, r *http.Request) {
+		// Set CORS headers so standard web browsers can request it
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		// Retrieve parameters
+		amountStr := r.URL.Query().Get("amount")
+		phone := r.URL.Query().Get("phone")
+		card := r.URL.Query().Get("card")
+		email := r.URL.Query().Get("email")
+		ip := r.URL.Query().Get("ip")
+
+		// If IP is not supplied, extract the real network client IP
+		if ip == "" {
+			ip = middleware.ExtractIP(r)
+		}
+
+		var amount float64
+		fmt.Sscanf(amountStr, "%f", &amount)
+
+		tx := antifraud.Transaction{
+			ID:                "tx_mobile_" + time.Now().Format("150405"),
+			UserID:            "user_mobile_test",
+			IP:                ip,
+			Amount:            amount,
+			CardBIN:           "440099",
+			CardCountry:       "KZ",
+			IPCountry:         "KZ",
+			RecipientPhone:    phone,
+			RecipientCard:     card,
+			Email:             email,
+			DeviceFingerprint: "device_samsung_z_flip_7_mobile",
+			Timestamp:         time.Now(),
+		}
+
+		// Run Go anti-fraud scoring rules
+		assessment, err := a.scanner.AnalyzeTransaction(context.Background(), tx)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusInternalServerError)
+			_, _ = w.Write([]byte(`{"status":"error","message":"Scanner execution crash"}`))
+			return
+		}
+
+		// If transaction is fraudulent, trigger the beautiful desktop Lock screen in Wails!
+		if !assessment.Approved {
+			assessmentJSON, _ := json.Marshal(assessment)
+			runtime.EventsEmit(a.ctx, "fraud_detected", string(assessmentJSON))
+		}
+
+		// Return JSON back to the phone
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{
+			"approved":       assessment.Approved,
+			"risk_score":     assessment.RiskScore,
+			"reasons":        assessment.Reasons,
+			"recommendation": assessment.Recommendation,
+		})
+	})
+
+	// Bind to all local interfaces on port 8080
+	_ = http.ListenAndServe("0.0.0.0:8080", mux)
 }
 
 // backgroundScannerLoop runs a continuous Go thread monitoring security telemetry & active IP bans.
