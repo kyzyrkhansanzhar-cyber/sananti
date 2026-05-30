@@ -958,6 +958,10 @@ func main() {
 	// 6. Wrap legitimate application layers with standard blockers
 	var handler http.Handler = mux
 
+	// Automated Background Anti-Fraud Scanner Antivirus Middleware
+	antiFraudMiddleware := middleware.NewAntiFraudMiddleware(scanner, blocker, fileLogger)
+	handler = antiFraudMiddleware.AutoScanMiddleware()(handler)
+
 	// Decoy Trap handlers
 	handler = honeyTrap.HandleTrap("/phpmyadmin")(handler)
 	handler = honeyTrap.HandleTrap("/api/v1/admin/config")(handler)
