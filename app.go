@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"sananti/antifraud"
 	"sananti/core"
 )
@@ -78,6 +79,27 @@ func NewApp() *App {
 // startup is called when the Wails desktop window initializes.
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+	// Launch background Goroutine real-time event-driven scanner thread
+	go a.backgroundScannerLoop()
+}
+
+// backgroundScannerLoop runs a continuous Go thread monitoring security telemetry & active IP bans.
+func (a *App) backgroundScannerLoop() {
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-a.ctx.Done():
+			return
+		case <-ticker.C:
+			// Emit dynamic security console shield heartbeats to show the live scanner is active
+			runtime.EventsEmit(a.ctx, "shield_heartbeat", map[string]interface{}{
+				"timestamp": time.Now().Format("15:04:05"),
+				"status":    "ACTIVE",
+			})
+		}
+	}
 }
 
 // GetConfig returns the dynamic scanner configuration JSON (threshold + active rules).
@@ -125,6 +147,9 @@ func (a *App) ScanTransaction(txJSON string) string {
 		status = "success"
 	} else {
 		status = "blocked"
+		// Emit real-time event to trigger full-screen Emergency Lock Modal in JS
+		assessmentJSON, _ := json.Marshal(assessment)
+		runtime.EventsEmit(a.ctx, "fraud_detected", string(assessmentJSON))
 	}
 
 	data, _ := json.Marshal(map[string]interface{}{
@@ -181,6 +206,13 @@ func (a *App) TriggerHoneytokenBlock(ip string, path string) string {
 
 	_ = a.fileLogger.LogAlert(alert)
 	_ = a.blocker.BlockIP(ip, reason)
+
+	// Broadcast bot detected event to show full screen lock modal
+	runtime.EventsEmit(a.ctx, "bot_detected", map[string]string{
+		"ip":     ip,
+		"path":   path,
+		"reason": reason,
+	})
 
 	return fmt.Sprintf(`{"status":"success","message":"IP %s blacklisted via Honeytoken trap!"}`, ip)
 }

@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Sananti Active Deception Shield</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <!-- Ambient Floating 3D Orbs -->
     <div class="bg-orb orb-1"></div>
@@ -36,8 +40,10 @@
                         <div class="shield-icon" id="shield-visual-icon">🛡️</div>
                     </div>
                     <div class="shield-status-info">
-                        <div class="shield-status-badge protected" id="shield-status-text" data-i18n="statusProtected">SYSTEM PROTECTED</div>
-                        <p class="shield-status-desc" id="shield-status-desc" data-i18n="statusProtectedDesc">Decoy honeytokens armed. Anti-fraud analysis active. Real-time interception enabled.</p>
+                        <div class="shield-status-badge protected" id="shield-status-text" data-i18n="statusProtected">
+                            SYSTEM PROTECTED</div>
+                        <p class="shield-status-desc" id="shield-status-desc" data-i18n="statusProtectedDesc">Decoy
+                            honeytokens armed. Anti-fraud analysis active. Real-time interception enabled.</p>
                     </div>
                     <div class="toggle-switch-container">
                         <span class="toggle-label" data-i18n="toggleShield">Engage System Protection</span>
@@ -47,23 +53,27 @@
                         </label>
                     </div>
                 </div>
-                
+
                 <!-- Right: Threshold Slider and Active Rules -->
-                <div class="settings-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div class="settings-card"
+                    style="display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
                         <label data-i18n="threshold" style="margin-bottom: 12px;">🛑 Block Threat Threshold</label>
                         <div class="slider-container" style="margin-bottom: 20px;">
-                            <input type="range" id="config-threshold" min="0.10" max="1.00" step="0.05" value="0.70" oninput="document.getElementById('threshold-display').innerText = parseFloat(this.value).toFixed(2)">
+                            <input type="range" id="config-threshold" min="0.10" max="1.00" step="0.05" value="0.70"
+                                oninput="document.getElementById('threshold-display').innerText = parseFloat(this.value).toFixed(2)">
                             <span class="slider-val" id="threshold-display">0.70</span>
                         </div>
                     </div>
                     <div>
-                        <label data-i18n="activeRules" style="margin-bottom: 12px;">🛡️ Active Scanning Risk Rules</label>
+                        <label data-i18n="activeRules" style="margin-bottom: 12px;">🛡️ Active Scanning Risk
+                            Rules</label>
                         <div class="rules-grid" id="rules-toggles-container">
                             <!-- Loaded dynamically via Go bindings -->
                         </div>
                     </div>
-                    <button id="save-config-btn" data-i18n="saveSettings" style="margin-top: 20px; padding: 12px 20px; font-size: 0.95em;">Save Settings</button>
+                    <button id="save-config-btn" data-i18n="saveSettings"
+                        style="margin-top: 20px; padding: 12px 20px; font-size: 0.95em;">Save Settings</button>
                 </div>
             </div>
         </div>
@@ -72,14 +82,18 @@
             <!-- Antivirus Threat Simulator -->
             <div class="card" style="position: relative;">
                 <h2 data-i18n="payGuardTitle">💳 Real-Time Payment Guard</h2>
-                
+
                 <!-- Target Selector Tabs -->
                 <div style="margin-bottom: 20px;">
-                    <label data-i18n="selectProfile" style="margin-bottom: 12px; display: block;">Select Scan Target Profile</label>
+                    <label data-i18n="selectProfile" style="margin-bottom: 12px; display: block;">Select Scan Target
+                        Profile</label>
                     <div class="target-profile-selector">
-                        <button type="button" class="profile-tab active" id="profile-tab-safe" data-target="safe" data-i18n="profileSafe">🟢 Legit User (Aidos K.)</button>
-                        <button type="button" class="profile-tab" id="profile-tab-scammer" data-target="scammer" data-i18n="profileScammer">🛑 Known Scammer Card</button>
-                        <button type="button" class="profile-tab" id="profile-tab-bot" data-target="bot" data-i18n="profileBot">🤖 Malicious Recon Bot</button>
+                        <button type="button" class="profile-tab active" id="profile-tab-safe" data-target="safe"
+                            data-i18n="profileSafe">🟢 Legit User (Aidos K.)</button>
+                        <button type="button" class="profile-tab" id="profile-tab-scammer" data-target="scammer"
+                            data-i18n="profileScammer">🛑 Known Scammer Card</button>
+                        <button type="button" class="profile-tab" id="profile-tab-bot" data-target="bot"
+                            data-i18n="profileBot">🤖 Malicious Recon Bot</button>
                     </div>
                 </div>
 
@@ -90,10 +104,15 @@
 
                 <!-- Deep Antivirus Scan Action Button & Progress Indicator -->
                 <div class="scan-action-container" style="margin-top: 25px;">
-                    <div class="scan-progress-bar-bg" id="scan-progress-wrapper" style="display: none; height: 8px; background: rgba(0, 0, 0, 0.4); border-radius: 4px; overflow: hidden; margin-bottom: 12px; border: 1px solid rgba(167, 139, 250, 0.15);">
-                        <div class="scan-progress-bar-fill" id="scan-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan)); box-shadow: 0 0 10px var(--neon-cyan); transition: width 0.1s ease;"></div>
+                    <div class="scan-progress-bar-bg" id="scan-progress-wrapper"
+                        style="display: none; height: 8px; background: rgba(0, 0, 0, 0.4); border-radius: 4px; overflow: hidden; margin-bottom: 12px; border: 1px solid rgba(167, 139, 250, 0.15);">
+                        <div class="scan-progress-bar-fill" id="scan-progress-fill"
+                            style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan)); box-shadow: 0 0 10px var(--neon-cyan); transition: width 0.1s ease;">
+                        </div>
                     </div>
-                    <div class="scan-status-text" id="scan-status-indicator" style="display: none; font-family: 'Fira Code', monospace; font-size: 0.85em; color: var(--neon-purple); margin-bottom: 15px; text-align: center;">Scanning layers... 0%</div>
+                    <div class="scan-status-text" id="scan-status-indicator"
+                        style="display: none; font-family: 'Fira Code', monospace; font-size: 0.85em; color: var(--neon-purple); margin-bottom: 15px; text-align: center;">
+                        Scanning layers... 0%</div>
                     <button type="button" id="trigger-scan-btn" data-i18n="btnScan">⚡ Engage Deep Security Scan</button>
                 </div>
 
@@ -107,11 +126,15 @@
                 <p style="color: var(--text-muted); font-size: 0.9em; margin-bottom: 20px;" data-i18n="decoyDesc">
                     Decoys scan for malicious bots and reconnaissance. Triggering traps instantly blacklists your IP.
                 </p>
-                
+
                 <label>Trigger Decoy Honeytoken Simulation</label>
                 <div style="margin-bottom: 25px; display: flex; flex-direction: column; gap: 10px;">
-                    <button type="button" class="trap-btn" data-path="/phpmyadmin" style="background: rgba(255, 85, 85, 0.1); border: 1px solid rgba(255, 85, 85, 0.25); color: var(--neon-red); font-family: monospace;">Simulate GET /phpmyadmin</button>
-                    <button type="button" class="trap-btn" data-path="/api/v1/admin/config" style="background: rgba(255, 85, 85, 0.1); border: 1px solid rgba(255, 85, 85, 0.25); color: var(--neon-red); font-family: monospace;">Simulate GET /api/v1/admin/config</button>
+                    <button type="button" class="trap-btn" data-path="/phpmyadmin"
+                        style="background: rgba(255, 85, 85, 0.1); border: 1px solid rgba(255, 85, 85, 0.25); color: var(--neon-red); font-family: monospace;">Simulate
+                        GET /phpmyadmin</button>
+                    <button type="button" class="trap-btn" data-path="/api/v1/admin/config"
+                        style="background: rgba(255, 85, 85, 0.1); border: 1px solid rgba(255, 85, 85, 0.25); color: var(--neon-red); font-family: monospace;">Simulate
+                        GET /api/v1/admin/config</button>
                 </div>
 
                 <div id="trap-result" style="font-weight: bold; margin-top: 10px;"></div>
@@ -127,9 +150,23 @@
         </div>
     </div>
 
+    <!-- Real-Time Emergency Antivirus Lock Screen Modal -->
+    <div id="emergency-modal" class="emergency-modal-overlay">
+        <div class="emergency-modal-card">
+            <div class="emergency-icon-glow">🛑</div>
+            <h2 id="emergency-title" style="font-family: 'Outfit', sans-serif; font-weight:800; color:var(--neon-red); text-shadow:0 0 10px rgba(255,85,127,0.3); margin-top:0;">EMERGENCY LOCK DISPATCHED</h2>
+            <p id="emergency-message" style="color:var(--text-main); font-size:1.05em; line-height:1.5;">Fraudulent transaction detected. All payments suspended to secure your assets.</p>
+            <div class="scammer-alert-details" id="emergency-details">
+                <!-- Details about the scammer -->
+            </div>
+            <button type="button" class="emergency-dismiss-btn" id="emergency-dismiss-btn">🔓 SECURE SYSTEM & DISMISS</button>
+        </div>
+    </div>
+
     <!-- Wails Bindings Bridge -->
     <script src="/wails/ipc.js"></script>
     <script src="/wails/runtime.js"></script>
     <script src="main.js"></script>
 </body>
+
 </html>

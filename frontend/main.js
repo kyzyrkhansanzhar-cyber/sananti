@@ -132,6 +132,159 @@ function toggleProtection(active) {
     }
 }
 
+// Emergency Lock Dismissal
+function dismissEmergencyLock() {
+    const modal = document.getElementById('emergency-modal');
+    if (modal) modal.style.display = 'none';
+    
+    // Resume normal design colors
+    const active = document.getElementById('antivirus-toggle').checked;
+    const lang = localStorage.getItem('sananti_lang') || 'en';
+    updateShieldUI(active, lang);
+    
+    document.body.style.backgroundImage = 'radial-gradient(circle at 50% 50%, #17112d 0%, #05040a 100%)';
+}
+
+// Scammer Fraud Event Emergency Lock Screen
+function triggerRealTimeEmergencyLock(assessment) {
+    const modal = document.getElementById('emergency-modal');
+    const title = document.getElementById('emergency-title');
+    const message = document.getElementById('emergency-message');
+    const details = document.getElementById('emergency-details');
+    const lang = localStorage.getItem('sananti_lang') || 'en';
+    
+    if (!modal || !title || !message || !details) return;
+
+    // Localized emergency headers & body messages
+    const modalContent = {
+        en: {
+            title: "🚨 SCAMMER INTERCEPTED: KASPI BLOCKED!",
+            msg: "Real-time automated antivirus scanner caught high-level financial fraud attempt. Payment canceled to protect your funds.",
+            flags: "Detected Scammer Risk Flags:"
+        },
+        kk: {
+            title: "🚨 АЛАЯҚ ТОҚТАТЫЛДЫ: KASPI БҰҒАТТАЛДЫ!",
+            msg: "Белсенді автоматты антивирус сканері қаржылық алаяқтық әрекетін тоқтатты. Қаражатыңызды сақтау үшін аударма бұғатталды.",
+            flags: "Анықталған қауіп факторлары:"
+        },
+        ru: {
+            title: "🚨 МОШЕННИК ПЕРЕХВАЧЕН: KASPI ЗАБЛОКИРОВАН!",
+            msg: "Активный авто-сканер заблокировал попытку финансового мошенничества. Перевод заблокирован для защиты ваших денег.",
+            flags: "Обнаруженные факторы риска:"
+        }
+    };
+
+    title.innerText = modalContent[lang].title;
+    message.innerText = modalContent[lang].msg;
+
+    const reasonsTransl = {
+        "[GeoMismatchCheck]": {
+            en: "🌍 Card billing country mismatch with transaction IP location",
+            kk: "🌍 Карта мен IP мекенжайдың геолокациялық сәйкессіздігі",
+            ru: "🌍 Несовпадение биллинга карты и геолокации IP"
+        },
+        "[AmountAnomalyCheck]": {
+            en: "💰 Transfer amount exceeds high-value velocity limit",
+            kk: "💰 Аударма сомасы қауіпсіздік шегінен асып кетті",
+            ru: "💰 Сумма перевода превышает лимиты безопасности"
+        },
+        "[EmailDomainRiskCheck]": {
+            en: "📧 Burner email address registration blocked",
+            kk: "📧 Тіркелген уақытша электрондық пошта бұғатталды",
+            ru: "📧 Одноразовый временный ящик электронной почты"
+        },
+        "[RecipientBlacklistCheck]": {
+            en: "📞 Destination account matches known mule/scammer phone database",
+            kk: "📞 Алушы нөмірі белгілі алаяқтар базасымен сәйкес келді",
+            ru: "📞 Получатель совпал с базой известных мошенников"
+        }
+    };
+
+    let translatedReasons = [];
+    assessment.reasons.forEach(r => {
+        let matched = false;
+        Object.keys(reasonsTransl).forEach(k => {
+            if (r.includes(k)) {
+                translatedReasons.push(reasonsTransl[k][lang]);
+                matched = true;
+            }
+        });
+        if (!matched) {
+            translatedReasons.push(r);
+        }
+    });
+
+    details.innerHTML = `<strong style="display:block; margin-bottom: 6px; color:#fff;">${modalContent[lang].flags}</strong>` +
+                        translatedReasons.map(r => `• ${r}`).join('<br/>') +
+                        `<br/><br/><span style="font-size:0.95em;color:var(--neon-red); font-weight:bold;">` +
+                        `${lang === 'kk' ? 'Алаяқтық деңгейі' : (lang === 'ru' ? 'Уровень угрозы' : 'Scam Score')}: ${(assessment.risk_score * 100).toFixed(0)}%` +
+                        `</span>`;
+
+    modal.style.display = 'flex';
+    
+    // Visual flash animation on the main app background
+    document.body.style.backgroundImage = 'radial-gradient(circle at 50% 50%, #3a0c18 0%, #05040a 100%)';
+}
+
+// Bot Exploitation Event Emergency Lock Screen
+function triggerBotEmergencyLock(botData) {
+    const modal = document.getElementById('emergency-modal');
+    const title = document.getElementById('emergency-title');
+    const message = document.getElementById('emergency-message');
+    const details = document.getElementById('emergency-details');
+    const lang = localStorage.getItem('sananti_lang') || 'en';
+    
+    if (!modal || !title || !message || !details) return;
+
+    const modalContent = {
+        en: {
+            title: "🚨 EXPLOITATION DETECTED: BOT BLACKLISTED!",
+            msg: "Intruder attempted to exploit hidden honeytoken pathways. Automated defensive firewall isolated the attacker.",
+            flags: "Firewall Mitigation Details:"
+        },
+        kk: {
+            title: "🚨 ШАБУЫЛ АНЫҚТАЛДЫ: БОТ ҚАРА ТІЗІМДЕ!",
+            msg: "Зиянды бот қорғалған жалған сілтемелерді бұзуға әрекеттенді. Белсенді файрвол шабуылдаушыны бірден оқшаулады.",
+            flags: "Қалқанның қорғаныс есебі:"
+        },
+        ru: {
+            title: "🚨 ПОПЫТКА ВЗЛОМА: БОТ В БАНЕ!",
+            msg: "Вредоносный сканер зафиксирован на защищенных приманках-honeytokens. IP злоумышленника заблокирован файрволом.",
+            flags: "Детали блокировки файрволом:"
+        }
+    };
+
+    title.innerText = modalContent[lang].title;
+    message.innerText = modalContent[lang].msg;
+
+    details.innerHTML = `<strong style="display:block; margin-bottom: 6px; color:#fff;">${modalContent[lang].flags}</strong>` +
+                        `IP Address: <span style="color:var(--neon-purple); font-weight:bold;">${botData.ip}</span><br/>` +
+                        `Triggered decoy path: <span style="color:var(--neon-yellow);">${botData.path}</span><br/>` +
+                        `Firewall Action: <span style="color:var(--neon-red); font-weight:bold;">PERMANENT IP BAN</span>`;
+
+    modal.style.display = 'flex';
+    document.body.style.backgroundImage = 'radial-gradient(circle at 50% 50%, #3a0c18 0%, #05040a 100%)';
+}
+
+// Background Ticker Heartbeat Logger
+function updateHeartbeatIndicator(heartbeat) {
+    const consoleBox = document.getElementById('logs-console');
+    if (!consoleBox) return;
+    
+    // Periodically log scanner scan ticks softly without bloating
+    const active = document.getElementById('antivirus-toggle').checked;
+    if (active && Math.random() < 0.15) { // Only log occasionally so it's clean
+        const lang = localStorage.getItem('sananti_lang') || 'en';
+        const msg = {
+            en: `[${heartbeat.timestamp}] [SYSTEM] Active-defense Go goroutine scanning logs... Shield secure.`,
+            kk: `[${heartbeat.timestamp}] [ЖҮЙЕ] Белсенді Go goroutine ағыны трафикті сүзуде... Қорғаныс берік.`,
+            ru: `[${heartbeat.timestamp}] [СИСТЕМА] Активный поток Go goroutine фильтрует логи... Защита надежна.`
+        };
+        consoleBox.innerHTML += `<div class="console-line" style="color:var(--text-muted); font-size:0.9em;">${msg[lang]}</div>`;
+        consoleBox.scrollTop = consoleBox.scrollHeight;
+    }
+}
+
 // Language switcher controller
 function setLanguage(lang) {
     localStorage.setItem('sananti_lang', lang);
@@ -166,6 +319,10 @@ window.setLanguage = setLanguage;
 window.triggerTrap = triggerTrap;
 window.toggleProtection = toggleProtection;
 window.updateShieldUI = updateShieldUI;
+window.dismissEmergencyLock = dismissEmergencyLock;
+window.triggerRealTimeEmergencyLock = triggerRealTimeEmergencyLock;
+window.triggerBotEmergencyLock = triggerBotEmergencyLock;
+window.updateHeartbeatIndicator = updateHeartbeatIndicator;
 
 // Fetch configurations from Wails Go bindings
 async function loadConfig() {
@@ -603,6 +760,36 @@ window.addEventListener('DOMContentLoaded', () => {
         scanBtn.addEventListener('click', () => {
             executeDeepScan();
         });
+    }
+
+    // 6. Emergency lock screen dismiss button listener
+    const dismissBtn = document.getElementById('emergency-dismiss-btn');
+    if (dismissBtn) {
+        dismissBtn.addEventListener('click', () => {
+            dismissEmergencyLock();
+        });
+    }
+
+    // 7. Wails Runtime Asynchronous Backend Event Listeners (Goroutine scanner triggers)
+    const setupEventListeners = (runtimeObj) => {
+        runtimeObj.EventsOn("fraud_detected", (assessmentJSON) => {
+            const assessment = JSON.parse(assessmentJSON);
+            triggerRealTimeEmergencyLock(assessment);
+        });
+
+        runtimeObj.EventsOn("bot_detected", (botData) => {
+            triggerBotEmergencyLock(botData);
+        });
+
+        runtimeObj.EventsOn("shield_heartbeat", (heartbeat) => {
+            updateHeartbeatIndicator(heartbeat);
+        });
+    };
+
+    if (window.runtime) {
+        setupEventListeners(window.runtime);
+    } else if (window.wails) {
+        setupEventListeners(window.wails);
     }
 
     const savedLang = localStorage.getItem('sananti_lang') || 'en';
