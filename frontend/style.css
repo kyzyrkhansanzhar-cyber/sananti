@@ -1,18 +1,18 @@
 :root {
-    --bg-primary: #0a0815; /* Comfortable ultra-dark violet deep-space */
-    --card-bg: rgba(22, 16, 42, 0.55); /* Soothing translucent amethyst */
-    --card-border: rgba(167, 139, 250, 0.14); /* Soft lavender glass border */
-    --neon-cyan: #00ffcc; /* Bright alert turquoise */
-    --neon-purple: #c084fc; /* Comfortable warm lavender amethyst */
-    --neon-red: #ff557f; /* Eye-safe sunset rose */
-    --neon-yellow: #fbbf24; /* Warm soothing amber */
-    --text-main: #e2e8f0; /* Safe off-white */
-    --text-muted: #94a3b8; /* Eye-comfort slate gray */
+    --bg-primary: #050a18; /* iOS Midnight Deep-Blue space background */
+    --card-bg: rgba(255, 255, 255, 0.06); /* Premium iOS Translucent white glass */
+    --card-border: rgba(255, 255, 255, 0.12); /* Clean translucent white iOS border */
+    --neon-cyan: #00d2ff; /* iOS Ice-Blue highlights */
+    --neon-purple: #3b82f6; /* iOS Apple Blue primary accent */
+    --neon-red: #ff3b30; /* iOS Standard alert rose red */
+    --neon-yellow: #ffcc00; /* iOS Warning Amber yellow */
+    --text-main: #ffffff; /* Clean pure white text */
+    --text-muted: #94a3b8; /* iOS Slate grey secondary text */
 }
 
 body {
     background-color: var(--bg-primary);
-    background-image: radial-gradient(circle at 50% 50%, #17112d 0%, #05040a 100%);
+    background-image: radial-gradient(circle at 50% 50%, #0c1735 0%, #030611 100%);
     color: var(--text-main);
     font-family: 'Inter', -apple-system, sans-serif;
     margin: 0;
@@ -24,7 +24,7 @@ body {
     user-select: none; /* Desktop app native feel */
 }
 
-/* Ambient Soothing Blurred Floating Orbs */
+/* Ambient iOS Floating Blurred White/Blue Orbs */
 .bg-orb {
     position: fixed;
     width: 500px;
@@ -32,19 +32,19 @@ body {
     border-radius: 50%;
     filter: blur(150px);
     z-index: -1;
-    opacity: 0.16;
+    opacity: 0.14;
     pointer-events: none;
     animation: orbFloat 25s infinite alternate ease-in-out;
 }
 
 .orb-1 {
-    background: var(--neon-purple);
+    background: #ffffff; /* Premium pure white glow */
     top: -15%;
     left: -10%;
 }
 
 .orb-2 {
-    background: #7c3aed; /* Deep purple */
+    background: #007aff; /* Apple Blue glow */
     bottom: -15%;
     right: -10%;
     animation-delay: -12s;
@@ -52,7 +52,7 @@ body {
 
 @keyframes orbFloat {
     0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(100px, 50px) scale(1.2); }
+    100% { transform: translate(80px, 40px) scale(1.15); }
 }
 
 .container {
@@ -67,7 +67,7 @@ body {
     right: 0;
     display: flex;
     gap: 6px;
-    background: rgba(167, 139, 250, 0.04);
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--card-border);
     border-radius: 20px;
     padding: 4px;
@@ -89,14 +89,14 @@ body {
 }
 
 .lang-btn:hover {
-    color: var(--neon-purple);
-    background: rgba(167, 139, 250, 0.08);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .lang-btn.active {
-    background: linear-gradient(135deg, var(--neon-purple), #7c3aed);
+    background: linear-gradient(135deg, #007aff, #00d2ff);
     color: #fff;
-    box-shadow: 0 4px 12px rgba(192, 132, 252, 0.25);
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
 }
 
 header {
@@ -109,11 +109,11 @@ h1 {
     font-size: 3.2em;
     font-weight: 800;
     margin: 0;
-    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+    background: linear-gradient(135deg, #ffffff, var(--neon-cyan));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -2px;
-    filter: drop-shadow(0 4px 12px rgba(192, 132, 252, 0.2));
+    filter: drop-shadow(0 4px 12px rgba(0, 210, 255, 0.25));
 }
 
 .subtitle {
@@ -123,18 +123,18 @@ h1 {
     font-weight: 400;
 }
 
-/* Premium Soothing 3D Glassmorphic Panels */
+/* Premium iOS Glassmorphic Panels */
 .top-config-bar, .card {
     background: var(--card-bg);
-    backdrop-filter: blur(25px) saturate(180%);
-    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    backdrop-filter: blur(30px) saturate(190%);
+    -webkit-backdrop-filter: blur(30px) saturate(190%);
     border: 1px solid var(--card-border);
     border-radius: 24px;
     padding: 30px;
     box-shadow: 
         0 25px 50px -12px rgba(0, 0, 0, 0.6), 
-        inset 0 1px 0 rgba(255, 255, 255, 0.06),
-        0 0 40px rgba(192, 132, 252, 0.02);
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 0 40px rgba(0, 122, 255, 0.02);
     transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.5s, border-color 0.3s;
     transform-style: preserve-3d;
     perspective: 1000px;
@@ -142,11 +142,11 @@ h1 {
 
 .top-config-bar:hover, .card:hover {
     transform: translateY(-5px) rotateX(0.8deg) rotateY(0.4deg);
-    border-color: rgba(192, 132, 252, 0.3);
+    border-color: rgba(255, 255, 255, 0.25);
     box-shadow: 
         0 40px 80px -15px rgba(0, 0, 0, 0.8),
-        0 0 35px rgba(192, 132, 252, 0.05), 
-        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        0 0 35px rgba(0, 122, 255, 0.05), 
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .top-config-bar {
@@ -168,10 +168,10 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgba(15, 10, 30, 0.45);
+    background: rgba(255, 255, 255, 0.03);
     border-radius: 20px;
     padding: 24px;
-    border: 1px solid rgba(167, 139, 250, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     position: relative;
     overflow: hidden;
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
@@ -179,14 +179,14 @@ h1 {
 
 .hub-title {
     font-size: 1.05em;
-    color: var(--neon-purple);
+    color: var(--neon-cyan);
     margin-top: 0;
     margin-bottom: 20px;
     font-family: 'Outfit', sans-serif;
     font-weight: 700;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    text-shadow: 0 0 10px rgba(192, 132, 252, 0.25);
+    text-shadow: 0 0 10px rgba(0, 210, 255, 0.25);
 }
 
 .shield-container {
@@ -203,7 +203,7 @@ h1 {
     font-size: 3.5em;
     z-index: 2;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    filter: drop-shadow(0 0 8px rgba(192, 132, 252, 0.4));
+    filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.4));
 }
 
 .shield-glow {
@@ -211,7 +211,7 @@ h1 {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: radial-gradient(circle, var(--neon-cyan) 0%, rgba(167, 139, 250, 0) 70%);
+    background: radial-gradient(circle, var(--neon-cyan) 0%, rgba(255, 255, 255, 0) 70%);
     filter: blur(10px);
     z-index: 1;
     opacity: 0.6;
@@ -261,17 +261,17 @@ h1 {
 }
 
 .shield-status-badge.protected {
-    background: rgba(0, 255, 204, 0.1);
+    background: rgba(0, 210, 255, 0.1);
     color: var(--neon-cyan);
     border: 1px solid var(--neon-cyan);
-    box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
 }
 
 .shield-status-badge.suspended {
-    background: rgba(255, 85, 127, 0.1);
+    background: rgba(255, 59, 48, 0.1);
     color: var(--neon-red);
     border: 1px solid var(--neon-red);
-    box-shadow: 0 0 15px rgba(255, 85, 127, 0.2);
+    box-shadow: 0 0 15px rgba(255, 59, 48, 0.2);
 }
 
 .shield-status-desc {
@@ -281,7 +281,7 @@ h1 {
     line-height: 1.45;
 }
 
-/* Antivirus Slider Toggle Switch */
+/* iOS Premium Slider Toggle Switch */
 .switch {
     position: relative;
     display: inline-block;
@@ -305,7 +305,7 @@ h1 {
     background-color: rgba(255, 255, 255, 0.08);
     transition: .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border-radius: 34px;
-    border: 1px solid rgba(167, 139, 250, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .switch-slider:before {
@@ -315,22 +315,22 @@ h1 {
     width: 20px;
     left: 3px;
     bottom: 3px;
-    background-color: #a78bfa;
+    background-color: #cbd5e1;
     transition: .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border-radius: 50%;
     box-shadow: 0 2px 5px rgba(0,0,0,0.4);
 }
 
 input:checked + .switch-slider {
-    background-color: rgba(0, 255, 204, 0.15);
-    border-color: var(--neon-cyan);
-    box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+    background-color: rgba(0, 122, 255, 0.15);
+    border-color: #007aff;
+    box-shadow: 0 0 15px rgba(0, 122, 255, 0.3);
 }
 
 input:checked + .switch-slider:before {
     transform: translateX(24px);
-    background-color: var(--neon-cyan);
-    box-shadow: 0 0 8px var(--neon-cyan);
+    background-color: #007aff;
+    box-shadow: 0 0 8px #007aff;
 }
 
 .toggle-switch-container {
@@ -340,7 +340,7 @@ input:checked + .switch-slider:before {
     width: 100%;
     margin-top: 15px;
     padding-top: 14px;
-    border-top: 1px solid rgba(167, 139, 250, 0.12);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .toggle-label {
@@ -361,16 +361,16 @@ input:checked + .switch-slider:before {
     font-size: 0.85em;
     color: var(--text-main);
     cursor: pointer;
-    background: rgba(167, 139, 250, 0.02);
+    background: rgba(255, 255, 255, 0.02);
     padding: 8px 12px;
     border-radius: 8px;
-    border: 1px solid rgba(167, 139, 250, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     transition: background 0.2s, border-color 0.2s;
 }
 
 .rule-checkbox:hover {
-    background: rgba(167, 139, 250, 0.06);
-    border-color: rgba(167, 139, 250, 0.15);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
 }
 
 .rule-checkbox input {
@@ -395,11 +395,11 @@ h2 {
     margin-top: 0;
     font-size: 1.6em;
     font-weight: 700;
-    border-bottom: 1px solid rgba(167, 139, 250, 0.12);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     padding-bottom: 15px;
-    color: var(--neon-purple);
+    color: #fff;
     letter-spacing: -0.5px;
-    text-shadow: 0 0 10px rgba(192, 132, 252, 0.2);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
 }
 
 .form-group {
@@ -416,14 +416,14 @@ label {
     letter-spacing: 1px;
 }
 
-/* Eye-Comfort Inner Shadow Inputs */
+/* iOS-Style Neomorphic Input Fields */
 input, select, textarea {
     width: 100%;
     background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(167, 139, 250, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     padding: 12px 14px;
-    color: #f3f4f6;
+    color: #ffffff;
     font-family: 'Inter', sans-serif;
     font-size: 0.95em;
     box-sizing: border-box;
@@ -433,35 +433,35 @@ input, select, textarea {
 }
 
 input:focus, select:focus, textarea:focus {
-    border-color: var(--neon-purple);
+    border-color: #007aff;
     background: rgba(0, 0, 0, 0.45);
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6), 0 0 15px rgba(192, 132, 252, 0.25);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 122, 255, 0.25);
 }
 
-/* 3D Soothing Violet Buttons */
+/* iOS Premium Blue Buttons */
 button {
     width: 100%;
-    background: linear-gradient(135deg, var(--neon-purple), #7c3aed);
+    background: linear-gradient(135deg, #007aff, #00d2ff);
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 14px;
     color: #fff;
     font-weight: 800;
     font-size: 1.05em;
     cursor: pointer;
-    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    box-shadow: 0 6px 20px rgba(0, 122, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(124, 58, 237, 0.45), 0 0 20px rgba(192, 132, 252, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    box-shadow: 0 12px 28px rgba(0, 122, 255, 0.5), 0 0 20px rgba(0, 210, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 button:active {
     transform: translateY(1px);
-    box-shadow: 0 4px 10px rgba(124, 58, 237, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2);
 }
 
 .trap-btn {
@@ -471,24 +471,24 @@ button:active {
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 12px rgba(255, 85, 127, 0.15);
+    box-shadow: 0 4px 12px rgba(255, 59, 48, 0.15);
 }
 
 .trap-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(255, 85, 127, 0.3), 0 0 15px rgba(255, 85, 127, 0.15);
+    box-shadow: 0 8px 24px rgba(255, 59, 48, 0.3), 0 0 15px rgba(255, 59, 48, 0.15);
 }
 
 .console-container {
     background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(167, 139, 250, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     padding: 20px;
     font-family: 'Fira Code', monospace;
     font-size: 0.85em;
     max-height: 250px;
     overflow-y: auto;
-    color: #b4befe;
+    color: #93c5fd;
     box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
@@ -497,7 +497,7 @@ button:active {
     white-space: pre-wrap;
 }
 
-.severity-critical { color: var(--neon-red); font-weight: bold; text-shadow: 0 0 8px rgba(255, 85, 127, 0.3); }
+.severity-critical { color: var(--neon-red); font-weight: bold; text-shadow: 0 0 8px rgba(255, 59, 48, 0.3); }
 .severity-warning { color: var(--neon-yellow); font-weight: bold; }
 .severity-info { color: var(--neon-cyan); }
 
@@ -509,9 +509,9 @@ button:active {
     font-weight: bold;
     text-transform: uppercase;
 }
-.badge-block { background: rgba(255,85,127,0.2); color: var(--neon-red); }
-.badge-review { background: rgba(251,191,36,0.2); color: var(--neon-yellow); }
-.badge-approve { background: rgba(0,255,204,0.2); color: var(--neon-cyan); }
+.badge-block { background: rgba(255, 59, 48, 0.2); color: var(--neon-red); }
+.badge-review { background: rgba(255, 204, 0, 0.2); color: var(--neon-yellow); }
+.badge-approve { background: rgba(0, 210, 255, 0.2); color: var(--neon-cyan); }
 
 #result-box {
     margin-top: 20px;
@@ -535,9 +535,9 @@ button:active {
 .slider-val {
     font-family: 'Fira Code', monospace;
     font-weight: 700;
-    color: var(--neon-purple);
+    color: var(--neon-cyan);
     font-size: 1.1em;
-    text-shadow: 0 0 10px rgba(192, 132, 252, 0.3);
+    text-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
 }
 
 /* Neomorphic Profile Selector Tabs */
@@ -550,7 +550,7 @@ button:active {
 
 .profile-tab {
     background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(167, 139, 250, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     padding: 12px 16px;
     color: var(--text-muted);
@@ -565,21 +565,21 @@ button:active {
 
 .profile-tab:hover {
     color: #fff;
-    border-color: rgba(167, 139, 250, 0.3);
-    background: rgba(167, 139, 250, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.03);
 }
 
 .profile-tab.active {
     color: #fff;
-    background: rgba(167, 139, 250, 0.15);
-    border-color: var(--neon-purple);
-    box-shadow: 0 0 15px rgba(192, 132, 252, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 /* Profile Preview Card */
 .profile-preview-box {
-    background: rgba(10, 8, 22, 0.6);
-    border: 1px solid rgba(167, 139, 250, 0.1);
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     padding: 16px;
     font-size: 0.9em;
@@ -623,7 +623,7 @@ button:active {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(5, 3, 10, 0.9);
+    background: rgba(3, 6, 17, 0.92);
     backdrop-filter: blur(20px);
     z-index: 100000;
     display: none;
@@ -633,7 +633,7 @@ button:active {
 }
 
 .emergency-modal-card {
-    background: rgba(28, 12, 28, 0.85);
+    background: rgba(18, 5, 5, 0.85);
     border: 3px solid var(--neon-red);
     border-radius: 28px;
     padding: 40px;
@@ -641,8 +641,8 @@ button:active {
     width: 90%;
     text-align: center;
     box-shadow: 
-        0 0 50px rgba(255, 85, 127, 0.4), 
-        inset 0 0 30px rgba(255, 85, 127, 0.15);
+        0 0 50px rgba(255, 59, 48, 0.4), 
+        inset 0 0 30px rgba(255, 59, 48, 0.15);
     animation: scalePulse 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border-style: double;
 }
@@ -670,7 +670,7 @@ button:active {
 
 .scammer-alert-details {
     background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 85, 127, 0.2);
+    border: 1px solid rgba(255, 59, 48, 0.2);
     border-radius: 16px;
     padding: 16px;
     margin: 20px 0;
@@ -685,10 +685,10 @@ button:active {
     background: linear-gradient(135deg, var(--neon-red), #990022) !important;
     color: #fff !important;
     border: 1px solid var(--neon-red) !important;
-    box-shadow: 0 6px 20px rgba(255, 85, 127, 0.35) !important;
+    box-shadow: 0 6px 20px rgba(255, 59, 48, 0.35) !important;
     font-weight: 800;
 }
 
 .emergency-dismiss-btn:hover {
-    box-shadow: 0 12px 28px rgba(255, 85, 127, 0.5) !important;
+    box-shadow: 0 12px 28px rgba(255, 59, 48, 0.5) !important;
 }
