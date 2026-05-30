@@ -21,6 +21,7 @@ type Transaction struct {
 	IPCountry         string    `json:"ip_country"`
 	DeviceFingerprint string    `json:"device_fingerprint"`
 	Email             string    `json:"email"`
+	UserAgent         string    `json:"user_agent"`
 	Timestamp         time.Time `json:"timestamp"`
 }
 

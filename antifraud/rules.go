@@ -196,3 +196,36 @@ func (r *DeviceReputationRule) Evaluate(tx Transaction, history []Transaction, b
 
 	return 0.0, ""
 }
+
+// HeaderReputationRule detects automated headless browsers, curl scripts, and testing tools.
+type HeaderReputationRule struct{}
+
+func (r *HeaderReputationRule) Name() string { return "HeaderReputationCheck" }
+
+func (r *HeaderReputationRule) Evaluate(tx Transaction, history []Transaction, blocker core.Blocker) (float64, string) {
+	if tx.UserAgent == "" {
+		return 0.0, ""
+	}
+
+	ua := strings.ToLower(tx.UserAgent)
+	suspiciousSignatures := []string{
+		"headlesschrome",
+		"puppeteer",
+		"selenium",
+		"playwright",
+		"python-requests",
+		"curl/",
+		"wget/",
+		"postmanruntime",
+		"http-client",
+	}
+
+	for _, sig := range suspiciousSignatures {
+		if strings.Contains(ua, sig) {
+			return 0.50, fmt.Sprintf("Automated user-agent or headless script signature detected: %q", sig)
+		}
+	}
+
+	return 0.0, ""
+}
+

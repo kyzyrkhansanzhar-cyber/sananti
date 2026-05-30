@@ -28,6 +28,7 @@ func TestAntiFraudScanner_RulesEvaluation(t *testing.T) {
 		NewEmailDomainRiskRule(),
 		NewCardBINBlacklistRule(),
 		NewDeviceReputationRule(10 * time.Second),
+		&HeaderReputationRule{},
 	}
 	scanner := NewAntiFraudScanner(blocker, mlog, rules...)
 
@@ -139,6 +140,26 @@ func TestAntiFraudScanner_RulesEvaluation(t *testing.T) {
 	}
 	if assessDevice.RiskScore != 0.60 {
 		t.Errorf("expected risk score 0.60, got %.2f", assessDevice.RiskScore)
+	}
+
+	// --- Case 5: Automated User Agent Header Check ---
+	txUA := Transaction{
+		ID:        "tx-ua-1",
+		UserID:    "user-ua",
+		IP:        "192.168.1.50",
+		Amount:    30.0,
+		UserAgent: "Mozilla/5.0 HeadlessChrome/124.0.0.0 Safari/5.37", // Suspicious headless user-agent
+		Timestamp: time.Now(),
+	}
+	assessUA, err := scanner.AnalyzeTransaction(ctx, txUA)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !assessUA.Approved {
+		t.Error("expected automated user-agent alone to flag REVIEW (score: 0.50)")
+	}
+	if assessUA.RiskScore != 0.50 {
+		t.Errorf("expected risk score 0.50, got %.2f", assessUA.RiskScore)
 	}
 }
 

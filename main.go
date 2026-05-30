@@ -76,6 +76,7 @@ func main() {
 		antifraud.NewEmailDomainRiskRule(),
 		antifraud.NewCardBINBlacklistRule(),
 		antifraud.NewDeviceReputationRule(5 * time.Minute),
+		&antifraud.HeaderReputationRule{},
 	}
 	scanner := antifraud.NewAntiFraudScanner(blocker, fileLogger, rules...)
 
@@ -903,6 +904,9 @@ func main() {
 		// Inject client parameters securely
 		if tx.IP == "" {
 			tx.IP = middleware.ExtractIP(r)
+		}
+		if tx.UserAgent == "" {
+			tx.UserAgent = r.UserAgent()
 		}
 		tx.Timestamp = time.Now()
 
